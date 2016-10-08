@@ -31,51 +31,36 @@ function dbForName(name) {
 
 function parseEntry(db, table, entry) {
   return new Promise((resolve, reject) => {
-    let resolved = false;
-    let buffer = [];
-
-    function add(parser, rows) {
-      Array.prototype.push.apply(buffer, rows);
-      if(buffer.length > 50) {
-        parser.pause();
-        flush(parser);
-      }
-    }
-    function flush(parser) {
-      db[table].bulkPut(buffer).then(() => {
-        parser && parser.resume()
-        buffer = [];
-      }, (error) => {
-        buffer.forEach(e => {
-          if(!e.stop_sequence) {
-            console.log(e);
-          }
-        });
-      });
-    }
-
     console.log('Processing '+table+'.txt');
     console.time('parsing');
-    entry.async('string').then(entry => {
-      Papa.parse(entry, {
-        header: true,
-        step: (results, parser) => {
-          add(parser, results.data);
-        },
-        complete: (results, file) => {
-          if(resolved) return;
-          flush();
+    let parser = new Papa.StringStreamer({
+      header: true
+    });
+    parser._nextChunk = () => {}
+
+    let promise = Promise.resolve();
+    let stream = entry.internalStream('string');
+
+    stream
+      .on('data', (chunk, metadata) => {
+        stream.pause();
+        let results = parser.parseChunk(chunk);
+        promise = db[table].bulkPut(results.data).then(() => {
+          stream.resume();
+        });
+      })
+      .on('end', () => {
+        promise.then(() => {
           console.timeEnd('parsing');
           console.log('Parsing '+table+'.txt complete');
-          resolved = true;
           resolve();
-        },
-        error: (error, file) => {
-          console.log('Error in parsing '+table+'.txt');
-          reject();
-        }
-      });
-    }, () => reject());
+        })
+      })
+      .on('error', () => {
+        console.log('Error in parsing '+table+'.txt');
+        reject();
+      })
+      .resume();
   });
 }
 
