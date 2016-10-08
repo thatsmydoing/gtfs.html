@@ -77,3 +77,25 @@ function loadFile(file, db) {
     }, Promise.resolve());
   })
 }
+
+function saveFile(file) {
+  let db = dbForName(file);
+  let zip = JSZip();
+  let promise = Object.keys(schema).reduce((acc, table) => {
+    return db[table].count().then(count => {
+      if(count == 0) {
+        return acc;
+      }
+      else {
+        return acc.then(() => db[table].toArray().then(data => {
+          zip.file(table+'.txt', Papa.unparse(data));
+        }));
+      }
+    });
+  }, Promise.resolve({}));
+  promise.then(() => {
+    zip.generateAsync({type: 'blob'}).then(content => {
+      saveAs(content, file);
+    });
+  });
+}
