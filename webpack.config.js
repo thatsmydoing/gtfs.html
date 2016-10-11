@@ -1,4 +1,5 @@
 module.exports = {
+  devtool: 'cheap-module-source-map',
   entry: './src/main.js',
   output: {
     path: './dist',
@@ -12,7 +13,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-          presets: ['es2015']
+          presets: ['es2015', 'react']
         }
       }
     ]

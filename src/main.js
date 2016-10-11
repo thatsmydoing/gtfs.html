@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import {saveAs} from 'file-saver';
 import * as Papa from 'papaparse';
 import JSZip from 'jszip';
@@ -17,17 +20,6 @@ let schema = {
 };
 
 let stores = {};
-
-let fileInput = document.querySelector('#file');
-fileInput.addEventListener('change', event => {
-  for(let i = 0; i < event.target.files.length; ++i) {
-    let file = event.target.files[i];
-    loadFile(file).then(db => {
-      stores[file.name] = db;
-      console.log('Finished importing '+file.name);
-    });
-  }
-});
 
 function parseEntry(table, entry) {
   return new Promise((resolve, reject) => {
@@ -92,4 +84,23 @@ function saveFile(file, db) {
   });
 }
 
-window.saveFile = saveFile;
+function App(props) {
+  let fileChange = event => {
+    for(let i = 0; i < event.target.files.length; ++i) {
+      let file = event.target.files[i];
+      loadFile(file).then(db => {
+        stores[file.name] = db;
+        console.log('Finished importing '+file.name);
+      });
+    }
+  };
+  let fileSave = _ => saveFile('gtfs.zip');
+  return (
+    <div>
+      <input type='file' onChange={fileChange} />
+      <input type='button' value='Save File' onClick={fileSave} />
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.querySelector('#container'));
