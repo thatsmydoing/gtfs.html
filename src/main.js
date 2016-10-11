@@ -12,24 +12,20 @@ let schema = {
   trips: '++trip_id, route_id'
 };
 
+let stores = {};
+
 let fileInput = document.querySelector('#file');
 fileInput.addEventListener('change', event => {
   for(let i = 0; i < event.target.files.length; ++i) {
     let file = event.target.files[i];
-    let db = dbForName(file.name);
-    loadFile(file, db).then(() => {
+    loadFile(file).then(db => {
+      stores[file.name] = db;
       console.log('Finished importing '+file.name);
     });
   }
 });
 
-function dbForName(name) {
-  let db = new Dexie(name);
-  db.version(1).stores(schema);
-  return db;
-}
-
-function parseEntry(db, table, entry) {
+function parseEntry(table, entry) {
   return new Promise((resolve, reject) => {
     console.log('Processing '+table+'.txt');
     console.time('parsing');
@@ -40,20 +36,18 @@ function parseEntry(db, table, entry) {
 
     let promise = Promise.resolve();
     let stream = entry.internalStream('string');
+    let list = [];
 
     stream
       .on('data', (chunk, metadata) => {
-        stream.pause();
         let results = parser.parseChunk(chunk);
-        promise = db[table].bulkPut(results.data).then(() => {
-          stream.resume();
-        });
+        Array.prototype.push.apply(list, results.data);
       })
       .on('end', () => {
         promise.then(() => {
           console.timeEnd('parsing');
           console.log('Parsing '+table+'.txt complete');
-          resolve();
+          resolve(list);
         })
       })
       .on('error', () => {
@@ -64,38 +58,36 @@ function parseEntry(db, table, entry) {
   });
 }
 
-function loadFile(file, db) {
+function loadFile(file) {
+  let db = {};
   return JSZip.loadAsync(file).then(zip => {
     return Object.keys(schema).reduce((acc, table) => {
       let entry = zip.file(table+'.txt');
       if(entry != null) {
-        return acc.then(() => parseEntry(db, table, entry));
+        return acc.then(db => {
+          return parseEntry(table, entry).then(list => {
+            db[table] = list;
+            return db;
+          });
+        });
       }
       else {
         return acc;
       }
-    }, Promise.resolve());
+    }, Promise.resolve(db));
   })
 }
 
-function saveFile(file) {
-  let db = dbForName(file);
+function saveFile(file, db) {
+  db = db || stores[file];
   let zip = JSZip();
-  let promise = Object.keys(schema).reduce((acc, table) => {
-    return db[table].count().then(count => {
-      if(count == 0) {
-        return acc;
-      }
-      else {
-        return acc.then(() => db[table].toArray().then(data => {
-          zip.file(table+'.txt', Papa.unparse(data));
-        }));
-      }
+  Object.keys(schema)
+    .filter(table => db[table])
+    .map(table => {
+      let data = db[table];
+      zip.file(table+'.txt', Papa.unparse(data));
     });
-  }, Promise.resolve({}));
-  promise.then(() => {
-    zip.generateAsync({type: 'blob'}).then(content => {
-      saveAs(content, file);
-    });
+  zip.generateAsync({type: 'blob'}).then(content => {
+    saveAs(content, file);
   });
 }
