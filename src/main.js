@@ -1,3 +1,7 @@
+import {saveAs} from 'file-saver';
+import * as Papa from 'papaparse';
+import JSZip from 'jszip';
+
 let schema = {
   agency: '++agency_id',
   calendar: '++service_id',
@@ -87,3 +91,5 @@ function saveFile(file, db) {
     saveAs(content, file);
   });
 }
+
+window.saveFile = saveFile;
