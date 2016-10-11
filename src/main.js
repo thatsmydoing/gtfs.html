@@ -64,25 +64,21 @@ function loadFile(file) {
     return Object.keys(schema).reduce((acc, table) => {
       let entry = zip.file(table+'.txt');
       if(entry != null) {
-        return acc.then(db => {
-          return parseEntry(table, entry).then(list => {
-            db[table] = list;
-            return db;
-          });
-        });
+        return acc.then(_ => parseEntry(table, entry).then(list => db[table] = list));
       }
       else {
+        db[table] = [];
         return acc;
       }
-    }, Promise.resolve(db));
-  })
+    }, Promise.resolve());
+  }).then(_ => db)
 }
 
 function saveFile(file, db) {
   db = db || stores[file];
   let zip = JSZip();
   Object.keys(schema)
-    .filter(table => db[table])
+    .filter(table => db[table].length > 0)
     .map(table => {
       let data = db[table];
       zip.file(table+'.txt', Papa.unparse(data));
