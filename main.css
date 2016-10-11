@@ -1,0 +1,21 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+  border: dashed 2px black;
+  border-radius: 15px;
+}
+
+.dropzone.active {
+  background: lightgray;
+}
+
+.dropzone div {
+  font-family: sans-serif;
+  display: inline-block;
+  margin: 10px;
+}
