@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {unloadFile} from '../actions';
 import UploadContainer from './UploadContainer';
+import TreeContainer from './TreeContainer';
 
 function component(props) {
   if(props.loading) {
@@ -21,7 +22,7 @@ function component(props) {
   else {
     return (
       <div>
-        <p>GTFS loaded successfully!</p>
+        <TreeContainer />
         <button onClick={props.onUnload}>Close</button>
       </div>
     )

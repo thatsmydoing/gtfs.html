@@ -19,3 +19,13 @@
   display: inline-block;
   margin: 10px;
 }
+
+.route {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.route .id {
+  font-size: 70%;
+  margin-bottom: 5px;
+}
