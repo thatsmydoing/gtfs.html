@@ -17,6 +17,9 @@ module.exports = {
           plugins: ['transform-object-rest-spread']
         }
       }
+    ],
+    noParse: [
+      /localforage\.js/
     ]
-  }
+  },
 }
