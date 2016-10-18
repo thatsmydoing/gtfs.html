@@ -2,8 +2,9 @@ import React from 'react';
 import {routeTypes} from '../constants';
 import Color from './Color';
 import Optional from './Optional';
+import TripList from './TripList';
 
-export default function RouteView(props) {
+function RouteInfo(props) {
   let sampleStyle = {
     backgroundColor: props.route_color ? '#'+props.route_color : '#FFFFFF',
     color: props.route_text_color ? '#'+props.route_text_color : '#000000'
@@ -69,5 +70,14 @@ export default function RouteView(props) {
         </tr>
       </tbody>
     </table>
+  )
+}
+
+export default function RouteView(props) {
+  return (
+    <div>
+      <RouteInfo {...props} />
+      <TripList trips={props.trips} />
+    </div>
   )
 }

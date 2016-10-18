@@ -20,12 +20,12 @@
   margin: 10px;
 }
 
-.route {
+.route, .trip {
   display: inline-flex;
   flex-direction: column;
 }
 
-.route .id {
+.route .id, .trip .id {
   font-size: 70%;
   margin-bottom: 5px;
 }
