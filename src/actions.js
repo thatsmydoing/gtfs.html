@@ -31,9 +31,10 @@ export function unloadFile() {
   }
 }
 
-export function navigateTo(target) {
+export function navigateTo(target, event) {
   return {
     type: NAVIGATE_TO,
-    path: target
+    path: target,
+    event
   }
 }

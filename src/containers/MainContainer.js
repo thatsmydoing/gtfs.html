@@ -36,7 +36,7 @@ function component(props) {
 }
 
 function mapStateToProps(state) {
-  let path = state.navigation[state.navigation.length - 1];
+  let path = state.navigation;
   return {path, ...state.feed};
 }
 
