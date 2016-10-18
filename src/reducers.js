@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {LOAD_FILE_REQUEST, LOAD_FILE_SUCCESS, LOAD_FILE_FAILURE, UNLOAD_FILE} from './actions';
+import {LOAD_FILE_REQUEST, LOAD_FILE_SUCCESS, LOAD_FILE_FAILURE, UNLOAD_FILE, NAVIGATE_TO} from './actions';
 
 const initialFeedState = {
   data: null,
@@ -34,8 +34,20 @@ function feedReducer(state = initialFeedState, action) {
   }
 }
 
+const initialNavigationState = []
+
+function navigationReducer(state = initialNavigationState, action) {
+  switch(action.type) {
+    case NAVIGATE_TO:
+      return [...state, action.path]
+    default:
+      return state;
+  }
+}
+
 const reducer = combineReducers({
-  feed: feedReducer
+  feed: feedReducer,
+  navigation: navigationReducer
 })
 
 export default reducer;

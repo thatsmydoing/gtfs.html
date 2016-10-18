@@ -19,7 +19,7 @@ function component(props) {
   else if(props.data == null) {
     return <UploadContainer />
   }
-  else {
+  else if(props.path == undefined) {
     return (
       <div>
         <TreeContainer />
@@ -27,10 +27,17 @@ function component(props) {
       </div>
     )
   }
+  else if(props.path.type == 'route') {
+    return <div>{props.path.id}</div>
+  }
+  else {
+    return <div>Not Found</div>
+  }
 }
 
 function mapStateToProps(state) {
-  return state.feed;
+  let path = state.navigation[state.navigation.length - 1];
+  return {path, ...state.feed};
 }
 
 function mapDispatchToProps(dispatch) {
