@@ -10,7 +10,7 @@ import App from './components/App';
 
 load().then(init => {
   init.navigation = navigation.getInitialState();
-  let store = createStore(reducer, init, applyMiddleware(thunk, serialize, navigation.middleware));
+  let store = createStore(reducer, init, applyMiddleware(thunk, serialize));
   navigation.register(store);
 
   ReactDOM.render(

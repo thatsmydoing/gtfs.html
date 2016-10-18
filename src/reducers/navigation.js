@@ -30,23 +30,18 @@ export function register(store) {
   });
 }
 
-export const middleware = store => next => action => {
-  if(action.type == NAVIGATE_TO) {
-    if(action.event) {
-      next(action);
-    }
-    else if(action.path == null) {
-      location.hash = '';
-    }
-    else {
-      let path = '#';
-      if(action.path.type) {
-        path += action.path.type;
-        if(action.path.id) {
-          path += '/'+action.path.id;
-        }
+export function link(type, id) {
+  if(!type && !id) {
+    return '';
+  }
+  else {
+    let path = '#';
+    if(type) {
+      path += type;
+      if(id) {
+        path += '/'+id;
       }
-      location.hash = path;
     }
+    return path;
   }
 }
