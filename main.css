@@ -29,3 +29,20 @@
   font-size: 70%;
   margin-bottom: 5px;
 }
+
+.not-specified {
+  font-style: italic;
+}
+
+.color .box {
+  display: inline-block;
+  height: 0.7em;
+  width: 0.7em;
+  border: solid 1px black;
+}
+
+.sample {
+  font-family: sans-serif;
+  border-radius: 5px;
+  padding: 5px;
+}

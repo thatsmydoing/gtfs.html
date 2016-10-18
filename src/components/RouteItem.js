@@ -1,15 +1,5 @@
 import React from 'react';
-
-const routeTypes = [
-  'Tram',
-  'Subway',
-  'Rail',
-  'Bus',
-  'Ferry',
-  'Cable car',
-  'Gondola',
-  'Funicular'
-]
+import {routeTypes} from '../constants';
 
 export default function RouteItem(props) {
   let name = props.route_short_name || props.route_long_name;
