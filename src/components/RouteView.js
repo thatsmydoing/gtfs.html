@@ -73,11 +73,25 @@ function RouteInfo(props) {
   )
 }
 
+function getRoute(props) {
+  let id = props.id;
+  let feed = props.feed;
+  let route = feed.routes.find(route => route.route_id == id);
+  if(route == undefined) {
+    return {};
+  }
+  else {
+    route.trips = feed.trips.filter(trip => trip.route_id == id);
+    return route;
+  }
+}
+
 export default function RouteView(props) {
+  let route = getRoute(props);
   return (
     <div>
-      <RouteInfo {...props} />
-      <TripList trips={props.trips} />
+      <RouteInfo {...route} />
+      <TripList trips={route.trips} />
     </div>
   )
 }

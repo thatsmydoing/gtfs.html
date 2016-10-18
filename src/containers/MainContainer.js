@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {unloadFile} from '../actions';
-import RouteContainer from './RouteContainer';
+import RouteView from '../components/RouteView';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
@@ -29,7 +29,7 @@ function component(props) {
     )
   }
   else if(props.path.type == 'route') {
-    return <RouteContainer />
+    return <RouteView id={props.path.id} feed={props.data} />
   }
   else {
     return <div>Not Found</div>
