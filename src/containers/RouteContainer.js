@@ -8,16 +8,15 @@ function component(props) {
 
 function mapStateToProps(state) {
   let id = state.navigation.id;
-  let result = {};
-  for(let i = 0; i < state.feed.data.routes.length; ++i) {
-    let route = state.feed.data.routes[i];
-    if(route.route_id == id) {
-      result = route;
-      break;
-    }
+  let feed = state.feed.data;
+  let route = feed.routes.find(route => route.route_id == id);
+  if(route == undefined) {
+    return {};
   }
-  result.trips = state.feed.data.trips.filter(trip => trip.route_id == id);
-  return result;
+  else {
+    route.trips = feed.trips.filter(trip => trip.route_id == id);
+    return route;
+  }
 }
 
 export default connect(mapStateToProps)(component);
