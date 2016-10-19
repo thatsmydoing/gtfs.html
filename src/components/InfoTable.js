@@ -44,7 +44,7 @@ function renderItem(object, key, schema) {
     return itemSchema.type[item];
   }
   if(itemSchema.type == 'url') {
-    return <a href={item}>{item}</a>
+    return <a target="_blank" href={item}>{item}</a>
   }
   if(itemSchema.type == 'color') {
     return <Color color={item} />
