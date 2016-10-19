@@ -20,12 +20,12 @@
   margin: 10px;
 }
 
-.route, .trip {
+.double-line {
   display: inline-flex;
   flex-direction: column;
 }
 
-.route .id, .trip .id {
+.double-line > span:last-child {
   font-size: 70%;
   margin-bottom: 5px;
 }
