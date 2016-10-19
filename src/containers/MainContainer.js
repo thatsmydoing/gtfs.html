@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {unloadFile} from '../actions';
 import RouteView from '../components/RouteView';
 import AgencyView from '../components/AgencyView';
+import TripView from '../components/TripView';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
@@ -34,6 +35,9 @@ function component(props) {
   }
   else if(props.path.type == 'agency') {
     return <AgencyView id={props.path.id} feed={props.data} />
+  }
+  else if(props.path.type == 'trips') {
+    return <TripView id={props.path.id} feed={props.data} />
   }
   else {
     return <div>Not Found</div>

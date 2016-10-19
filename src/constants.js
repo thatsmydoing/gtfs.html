@@ -9,6 +9,23 @@ export const routeTypes = [
   'Funicular'
 ]
 
+export const directionTypes = [
+  'Forward',
+  'Backward'
+]
+
+export const wheelchairTypes = [
+  'No information',
+  'At least one wheelchair accomodation',
+  'No wheelchair accomodations'
+]
+
+export const bikeTypes = [
+  'No information',
+  'At least one bicycle accomodation',
+  'No bicycle accomodations'
+]
+
 export const routeSchema = {
   agency_id: {
     name: 'Agency',
@@ -85,5 +102,52 @@ export const agencySchema = {
     name: 'Email',
     optional: true,
     type: 'email'
+  }
+}
+
+export const tripSchema = {
+  route_id: {
+    name: 'Route',
+    relation: 'route'
+  },
+  service_id: {
+    name: 'Service Schedule',
+    relation: 'service'
+  },
+  trip_id: {
+    name: 'ID'
+  },
+  trip_headsign: {
+    name: 'Headsign',
+    optional: true
+  },
+  trip_short_name: {
+    name: 'Short Name',
+    optional: true
+  },
+  direction_id: {
+    name: 'Direction',
+    optional: true,
+    type: directionTypes
+  },
+  block_id: {
+    name: 'Block',
+    optional: true,
+    relation: 'block'
+  },
+  shape_id: {
+    name: 'Shape',
+    optional: true,
+    relation: 'shape'
+  },
+  wheelchair_accessible: {
+    name: 'Wheelchair Accessibility',
+    optional: true,
+    type: wheelchairTypes
+  },
+  bikes_allowed: {
+    name: 'Bikes Allowed',
+    optional: true,
+    type: bikeTypes
   }
 }
