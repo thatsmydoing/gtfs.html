@@ -1,5 +1,6 @@
 import React from 'react';
 import {routeTypes} from '../constants';
+import {link} from '../reducers/navigation';
 import Color from './Color';
 import Optional from './Optional';
 import TripList from './TripList';
@@ -14,7 +15,11 @@ function RouteInfo(props) {
       <tbody>
         <tr>
           <td>Agency</td>
-          <td><Optional>{props.agency_id}</Optional></td>
+          <td>
+            <Optional valid={props.agency_id}>
+              <a href={link('agency', props.agency_id)}>{props.agency_id}</a>
+            </Optional>
+          </td>
         </tr>
         <tr>
           <td>ID</td>
