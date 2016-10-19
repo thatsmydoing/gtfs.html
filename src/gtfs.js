@@ -35,6 +35,9 @@ function parseEntry(table, entry) {
       })
       .on('end', () => {
         promise.then(() => {
+          parser._finished = true;
+          let results = parser.parseChunk('');
+          Array.prototype.push.apply(list, results.data);
           console.timeEnd('parsing');
           console.log('Parsing '+table+'.txt complete');
           resolve(list);
