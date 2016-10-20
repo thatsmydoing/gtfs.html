@@ -14,7 +14,7 @@ export const serialize = store => next => action => {
 export function load() {
   return localforage.getItem('gtfs').then(data => {
     if(data == null) {
-      return undefined;
+      return {};
     }
     else {
       console.log('Loading from debug storage');
