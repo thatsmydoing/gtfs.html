@@ -4,6 +4,7 @@ import {unloadFile} from '../actions';
 import RouteView from '../components/RouteView';
 import AgencyView from '../components/AgencyView';
 import TripView from '../components/TripView';
+import ServiceView from '../components/ServiceView';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
@@ -38,6 +39,9 @@ function component(props) {
   }
   else if(props.path.type == 'trips') {
     return <TripView id={props.path.id} feed={props.data} />
+  }
+  else if(props.path.type == 'service') {
+    return <ServiceView id={props.path.id} feed={props.data} />
   }
   else {
     return <div>Not Found</div>

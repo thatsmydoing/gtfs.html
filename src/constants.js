@@ -1,3 +1,30 @@
+export const monthsOfYear = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
+export const daysOfWeek = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday'
+]
+
+export const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 export const routeTypes = [
   'Tram',
   'Subway',
@@ -149,5 +176,63 @@ export const tripSchema = {
     name: 'Bikes Allowed',
     optional: true,
     type: bikeTypes
+  }
+}
+
+export const calendarSchema = {
+  service_id: {
+    name: 'ID'
+  },
+  monday: {
+    name: 'Monday',
+    type: 'boolean'
+  },
+  tuesday: {
+    name: 'Tuesday',
+    type: 'boolean'
+  },
+  wednesday: {
+    name: 'Wednesday',
+    type: 'boolean'
+  },
+  thursday: {
+    name: 'Thursday',
+    type: 'boolean'
+  },
+  friday: {
+    name: 'Friday',
+    type: 'boolean'
+  },
+  saturday: {
+    name: 'Saturday',
+    type: 'boolean'
+  },
+  sunday: {
+    name: 'Sunday',
+    type: 'boolean'
+  },
+  start_date: {
+    name: 'Start Date',
+    type: 'date'
+  },
+  end_date: {
+    name: 'End Date',
+    type: 'date'
+  }
+}
+
+export const calendarDatesSchema = {
+  service_id: {
+    name: 'Service ID'
+  },
+  date: {
+    name: 'Date'
+  },
+  exception_type: {
+    name: 'Type',
+    type: {
+      1: 'Added',
+      2: 'Removed'
+    }
   }
 }

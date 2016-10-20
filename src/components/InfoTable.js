@@ -1,5 +1,6 @@
 import React from 'react';
 import {link} from '../reducers/navigation';
+import {parseDate} from '../format';
 import Color from './Color';
 import ServiceItem from './ServiceItem';
 
@@ -46,6 +47,24 @@ function renderItem(object, key, schema) {
   }
   if(Array.isArray(itemSchema.type)) {
     return itemSchema.type[item];
+  }
+  if(itemSchema.type instanceof Object) {
+    return itemSchema.type[item];
+  }
+  if(itemSchema.type == 'boolean') {
+    if(item == 0) {
+      return 'false (0)';
+    }
+    else if(item == 1) {
+      return 'true (1)';
+    }
+    else {
+      return item;
+    }
+  }
+  if(itemSchema.type == 'date') {
+    let date = parseDate(item);
+    return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
   }
   if(itemSchema.type == 'url') {
     return <a target="_blank" href={item}>{item}</a>

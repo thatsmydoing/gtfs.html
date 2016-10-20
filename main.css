@@ -46,3 +46,50 @@
   border-radius: 5px;
   padding: 5px;
 }
+
+.service > div {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.service .side {
+  width: 300px;
+}
+
+.service .calendar {
+  width: calc(100% - 300px);
+}
+
+.calendar .controls {
+  text-align: center;
+}
+
+.month {
+  display: inline-block;
+  margin: 0px 10px;
+}
+
+.month h1 {
+  text-align: center;
+}
+
+.month .box {
+  text-align: center;
+  width: 1.5em;
+}
+
+.month .box.active {
+  background-color: palegreen;
+}
+
+.month .box.inactive {
+  background-color: lightsalmon;
+}
+
+.month .box.outofbounds {
+  background-color: gray;
+}
+
+.month .box.exception {
+  border: dashed 1px gray;
+}

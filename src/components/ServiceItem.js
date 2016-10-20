@@ -1,19 +1,10 @@
 import React from 'react';
 import {link} from '../reducers/navigation';
+import {daysOfWeek} from '../constants';
 
 function format(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)+'s';
 }
-
-const daysOfWeek = [
-  'sunday',
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday'
-]
 
 export default function ServiceItem(props) {
   let days = daysOfWeek.filter(dow => props[dow] == 1)
