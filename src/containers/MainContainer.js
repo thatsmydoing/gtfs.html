@@ -9,6 +9,14 @@ import BlockView from '../components/BlockView';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
+const componentMap = {
+  route: RouteView,
+  agency: AgencyView,
+  trip: TripView,
+  service: ServiceView,
+  block: BlockView
+}
+
 function component(props) {
   if(props.loading) {
     return <p>Loading file...</p>
@@ -32,20 +40,9 @@ function component(props) {
       </div>
     )
   }
-  else if(props.path.type == 'route') {
-    return <RouteView id={props.path.id} feed={props.data} />
-  }
-  else if(props.path.type == 'agency') {
-    return <AgencyView id={props.path.id} feed={props.data} />
-  }
-  else if(props.path.type == 'trip') {
-    return <TripView id={props.path.id} feed={props.data} />
-  }
-  else if(props.path.type == 'service') {
-    return <ServiceView id={props.path.id} feed={props.data} />
-  }
-  else if(props.path.type == 'block') {
-    return <BlockView id={props.path.id} feed={props.data} />
+  else if(componentMap[props.path.type]) {
+    let View = componentMap[props.path.type];
+    return <View id={props.path.id} feed={props.data} />
   }
   else {
     return <div>Not Found</div>
