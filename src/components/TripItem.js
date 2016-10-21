@@ -7,7 +7,7 @@ export default function TripItem(props) {
     <div className="double-line" title={name}>
       <span>{name}</span>
       <span>
-        {props.trip_id} <a href={link('trips', props.trip_id)}>Details</a>
+        {props.trip_id} <a href={link('trip', props.trip_id)}>Details</a>
       </span>
     </div>
   )

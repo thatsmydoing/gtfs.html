@@ -38,7 +38,7 @@ function component(props) {
   else if(props.path.type == 'agency') {
     return <AgencyView id={props.path.id} feed={props.data} />
   }
-  else if(props.path.type == 'trips') {
+  else if(props.path.type == 'trip') {
     return <TripView id={props.path.id} feed={props.data} />
   }
   else if(props.path.type == 'service') {
