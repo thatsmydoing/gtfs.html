@@ -6,3 +6,9 @@ export function getService(feed, service_id) {
     return service;
   }
 }
+
+export function getBlock(feed, block_id) {
+  let block = { block_id };
+  block.trips = feed.trips.filter(i => i.block_id == block_id);
+  return block;
+}
