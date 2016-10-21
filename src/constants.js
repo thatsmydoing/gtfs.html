@@ -223,10 +223,12 @@ export const calendarSchema = {
 
 export const calendarDatesSchema = {
   service_id: {
-    name: 'Service ID'
+    name: 'Service ID',
+    relation: 'calendar'
   },
   date: {
-    name: 'Date'
+    name: 'Date',
+    type: 'date'
   },
   exception_type: {
     name: 'Type',
