@@ -93,3 +93,44 @@
 .month .box.exception {
   border: dashed 1px gray;
 }
+
+.trip .restriction {
+  border-bottom: dotted 1px black;
+  cursor: help;
+}
+
+.trip .restriction:hover {
+  border-bottom: solid 1px black;
+}
+
+.scrubber {
+  display: flex;
+  align-items: center;
+}
+
+.scrubber .rendered {
+  position: relative;
+  display: inline-block;
+  flex-grow: 1;
+}
+
+.scrubber .label {
+  margin: 0px 5px;
+}
+
+.scrubber .segment {
+  display: inline-block;
+  height: 20px;
+  margin: 2px 0px;
+}
+
+.scrubber .thumb {
+  position: absolute;
+  display: inline-block;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-top: solid 2px gray;
+  border-bottom: solid 2px gray;
+  top: 0;
+  cursor: pointer;
+}

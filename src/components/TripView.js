@@ -1,7 +1,8 @@
 import React from 'react';
 import {tripSchema} from '../constants';
-import {getService} from '../selectors';
+import {getService, getTimetable} from '../selectors';
 import InfoTable from './InfoTable';
+import Timetable from './Timetable';
 
 function getTrip(props) {
   let id = props.id;
@@ -17,7 +18,12 @@ function getTrip(props) {
 }
 
 export default function TripView(props) {
+  let trip = getTrip(props);
+  let timetable = getTimetable(props.feed, props.id);
   return (
-    <InfoTable object={getTrip(props)} schema={tripSchema} />
+    <div className="trip">
+      <InfoTable object={trip} schema={tripSchema} />
+      <Timetable stopTimes={timetable.stopTimes} frequencies={timetable.frequencies} />
+    </div>
   )
 }

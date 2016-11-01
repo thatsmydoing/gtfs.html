@@ -53,6 +53,20 @@ export const bikeTypes = [
   'No bicycle accomodations'
 ]
 
+export const pickupTypes = [
+  'Regularly scheduled pickup',
+  'No pickup available',
+  'Must phone agency to arrange pickup',
+  'Must coordinate with driver to arrange pickup'
+]
+
+export const dropOffTypes = [
+  'Regularly scheduled drop off',
+  'No drop off available',
+  'Must phone agency to arrange drop off',
+  'Must coordinate with driver to arrange drop off'
+]
+
 export const routeSchema = {
   agency_id: {
     name: 'Agency',
@@ -236,5 +250,77 @@ export const calendarDatesSchema = {
       1: 'Added',
       2: 'Removed'
     }
+  }
+}
+
+export const stopTimeSchema = {
+  trip_id: {
+    name: 'Trip',
+    relation: 'trip'
+  },
+  arrival_time: {
+    name: 'Arrival Time',
+    type: 'time'
+  },
+  departure_time: {
+    name: 'Departure Time',
+    type: 'time'
+  },
+  stop_id: {
+    name: 'Stop',
+    relation: 'stop'
+  },
+  stop_sequence: {
+    name: 'Stop Sequence',
+    type: 'uint'
+  },
+  stop_headsign: {
+    name: 'Headsign',
+    optional: true
+  },
+  pickup_type: {
+    name: 'Pickup Type',
+    type: pickupTypes,
+    optional: true
+  },
+  drop_off_type: {
+    name: 'Drop Off Type',
+    type: dropOffTypes,
+    optional: true
+  },
+  shape_dist_traveled: {
+    name: 'Shape Distance Traveled',
+    type: 'float',
+    optional: true
+  },
+  timepoint: {
+    name: 'Timepoint',
+    type: 'boolean',
+    default: 1,
+    optional: true
+  }
+}
+
+export const frequencySchema = {
+  trip_id: {
+    name: 'Trip',
+    relation: 'trip'
+  },
+  start_time: {
+    name: 'Start Time',
+    type: 'time'
+  },
+  end_time: {
+    name: 'End Time',
+    type: 'time'
+  },
+  headway_secs: {
+    name: 'Headway',
+    type: 'uint'
+  },
+  exact_times: {
+    name: 'Exact times',
+    type: 'boolean',
+    optional: true
   }
 }

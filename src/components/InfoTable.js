@@ -28,30 +28,28 @@ const notSpecified = <span className='missing'>empty</span>;
 const columnAbsent = <span className='missing'>optional column absent</span>;
 const columnMissing = <span className='missing'>required column missing</span>;
 
-function renderItem(object, key, schema) {
-  let itemSchema = schema[key];
-  let present = object.hasOwnProperty(key);
+function renderItem(item, schema, object) {
+  let present = item != undefined;
   if(!present) {
-    return itemSchema.optional ? columnAbsent : columnMissing;
+    return schema.optional ? columnAbsent : columnMissing;
   }
-  if(!object[key]) {
+  if(item == '') {
     return notSpecified;
   }
 
-  let item = object[key];
-  if(itemSchema.relation) {
-    if(itemSchema.relation == 'service' && object.service) {
+  if(schema.relation) {
+    if(schema.relation == 'service' && object.service) {
       return <ServiceItem {...object.service} />
     }
-    return <a href={link(itemSchema.relation, item)}>{item}</a>
+    return <a href={link(schema.relation, item)}>{item}</a>
   }
-  if(Array.isArray(itemSchema.type)) {
-    return itemSchema.type[item];
+  if(Array.isArray(schema.type)) {
+    return schema.type[item];
   }
-  if(itemSchema.type instanceof Object) {
-    return itemSchema.type[item];
+  if(schema.type instanceof Object) {
+    return schema.type[item];
   }
-  if(itemSchema.type == 'boolean') {
+  if(schema.type == 'boolean') {
     if(item == 0) {
       return 'false (0)';
     }
@@ -62,23 +60,39 @@ function renderItem(object, key, schema) {
       return item;
     }
   }
-  if(itemSchema.type == 'date') {
+  if(schema.type == 'date') {
     let date = parseDate(item);
     return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
   }
-  if(itemSchema.type == 'url') {
+  if(schema.type == 'url') {
     return <a target="_blank" href={item}>{item}</a>
   }
-  if(itemSchema.type == 'color') {
+  if(schema.type == 'color') {
     return <Color color={item} />
   }
   return item;
 }
 
-function renderEntries(object, schema) {
+// TODO factor out of InfoTable
+export function filterSchema(schema, filter) {
+  let keys;
+  if(Array.isArray(filter)) {
+    keys = filter;
+  }
+  else {
+    keys = Object.keys(schema).filter(filter);
+  }
+  let newSchema = {};
+  keys.forEach(key => {
+    newSchema[key] = schema[key];
+  });
+  return newSchema;
+}
+
+export function renderEntries(object, schema, View = Entry) {
   return Object.keys(schema).map(key =>
-    <Entry name={schema[key].name} key={key}>
-      {renderItem(object, key, schema)}
-    </Entry>
+    <View name={schema[key].name} key={key}>
+      {renderItem(object[key], schema[key], object)}
+    </View>
   )
 }
