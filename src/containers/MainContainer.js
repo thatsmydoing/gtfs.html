@@ -6,6 +6,8 @@ import AgencyView from '../components/AgencyView';
 import TripView from '../components/TripView';
 import ServiceView from '../components/ServiceView';
 import BlockView from '../components/BlockView';
+import FareView from '../components/FareView';
+import ZoneView from '../components/ZoneView';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
@@ -14,7 +16,9 @@ const componentMap = {
   agency: AgencyView,
   trip: TripView,
   service: ServiceView,
-  block: BlockView
+  block: BlockView,
+  fare: FareView,
+  zone: ZoneView
 }
 
 function component(props) {

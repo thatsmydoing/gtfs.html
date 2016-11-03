@@ -67,6 +67,18 @@ export const dropOffTypes = [
   'Must coordinate with driver to arrange drop off'
 ]
 
+export const paymentMethodTypes = [
+  'Fare is paid on board',
+  'Fare must be paid before boarding'
+]
+
+export const transferTypes = {
+  0: 'No transfers permitted',
+  1: 'One transfer',
+  2: 'Two transfers',
+  '': 'Unlimited transfers'
+}
+
 export const routeSchema = {
   agency_id: {
     name: 'Agency',
@@ -321,6 +333,59 @@ export const frequencySchema = {
   exact_times: {
     name: 'Exact times',
     type: 'boolean',
+    optional: true
+  }
+}
+
+export const fareRulesSchema = {
+  fare_id: {
+    name: 'ID'
+  },
+  route_id: {
+    name: 'Route',
+    relation: 'route',
+    optional: true
+  },
+  origin_id: {
+    name: 'Origin',
+    relation: 'zone',
+    optional: true
+  },
+  destination_id: {
+    name: 'Destination',
+    relation: 'zone',
+    optional: true
+  },
+  contains_id: {
+    name: 'Contains',
+    relation: 'zone',
+    optional: true
+  }
+}
+
+export const fareAttributesSchema = {
+  fare_id: {
+    name: 'ID'
+  },
+  price: {
+    name: 'Price',
+    type: 'float'
+  },
+  currency_type: {
+    name: 'Currency',
+    type: 'currency'
+  },
+  payment_method: {
+    name: 'Payment Method',
+    type: paymentMethodTypes
+  },
+  transfers: {
+    name: 'Transfers',
+    type: transferTypes
+  },
+  transfer_duration: {
+    name: 'Transfer Duration',
+    type: 'uint',
     optional: true
   }
 }
