@@ -1,5 +1,5 @@
 import React from 'react';
-import {link} from '../reducers/navigation';
+import Link from './Link';
 
 export default function TripItem(props) {
   let name = props.trip_headsign || props.trip_short_name || 'Trip '+(props.index+1);
@@ -7,7 +7,7 @@ export default function TripItem(props) {
     <div className="double-line" title={name}>
       <span>{name}</span>
       <span>
-        {props.trip_id} <a href={link('trip', props.trip_id)}>Details</a>
+        {props.trip_id} <Link type='trip' id={props.trip_id}>Details</Link>
       </span>
     </div>
   )

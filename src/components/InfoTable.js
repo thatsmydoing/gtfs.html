@@ -1,8 +1,8 @@
 import React from 'react';
-import {link} from '../reducers/navigation';
 import {parseDate} from '../format';
 import Color from './Color';
 import ServiceItem from './ServiceItem';
+import Link from './Link';
 
 export default function InfoTable(props) {
   return (
@@ -41,7 +41,7 @@ function renderItem(item, schema, object) {
     if(schema.relation == 'service' && object.service) {
       return <ServiceItem {...object.service} />
     }
-    return <a href={link(schema.relation, item)}>{item}</a>
+    return <Link type={schema.relation} id={item} />
   }
   if(Array.isArray(schema.type)) {
     return schema.type[item];

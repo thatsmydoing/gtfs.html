@@ -1,6 +1,6 @@
 import React from 'react';
-import {link} from '../reducers/navigation';
 import {daysOfWeek} from '../constants';
+import Link from './Link';
 
 function format(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)+'s';
@@ -25,7 +25,7 @@ export default function ServiceItem(props) {
     <div className="service double-line">
       <span>{dows}</span>
       <span>
-        {props.start_date} - {props.end_date} <a href={link('service', props.service_id)}>Details</a>
+        {props.start_date} - {props.end_date} <Link type='service' id={props.service_id}>Details</Link>
       </span>
     </div>
   )
