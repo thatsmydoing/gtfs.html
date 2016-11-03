@@ -1,19 +1,7 @@
 import * as Papa from 'papaparse';
 import JSZip from 'jszip';
-
-export const schema = {
-  agency: '++agency_id',
-  calendar: '++service_id',
-  calendar_dates: '++,service_id',
-  fare_attributes: '++fare_id',
-  fare_rules: '++,fare_id,route_id',
-  frequencies: '++,trip_id',
-  routes: '++route_id',
-  shapes: '[shape_id+shape_pt_sequence]',
-  stops: '++stop_id',
-  stop_times: '[trip_id+stop_sequence]',
-  trips: '++trip_id, route_id'
-};
+import {schema, fields} from './schema';
+import {index} from './indexing';
 
 function parseEntry(table, entry) {
   return new Promise((resolve, reject) => {
@@ -64,7 +52,7 @@ export function load(file) {
         return acc;
       }
     }, Promise.resolve());
-  }).then(_ => db)
+  }).then(_ => index(db))
 }
 
 export function save(db) {

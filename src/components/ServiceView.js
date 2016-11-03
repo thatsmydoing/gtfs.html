@@ -1,6 +1,6 @@
 import React from 'react';
 import {getService} from '../selectors';
-import {calendarSchema} from '../constants';
+import {calendarSchema} from '../gtfs/schema';
 import {pad, parseDate} from '../format';
 import {daysOfWeek} from '../constants';
 import Calendar from './Calendar';

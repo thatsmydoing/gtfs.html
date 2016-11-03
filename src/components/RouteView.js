@@ -1,5 +1,6 @@
 import React from 'react';
-import {routeSchema} from '../constants';
+import {routeSchema} from '../gtfs/schema';
+import {getRoute} from '../selectors';
 import InfoTable, {Entry} from './InfoTable';
 import TripList from './TripList';
 
@@ -19,21 +20,9 @@ function RouteInfo(props) {
   )
 }
 
-function getRoute(props) {
-  let id = props.id;
-  let feed = props.feed;
-  let route = feed.routes.find(route => route.route_id == id);
-  if(route == undefined) {
-    return {};
-  }
-  else {
-    route.trips = feed.trips.filter(trip => trip.route_id == id);
-    return route;
-  }
-}
 
-export default function RouteView(props) {
-  let route = getRoute(props);
+export default function RouteView({feed, id}) {
+  let route = getRoute(feed, id);
   return (
     <div>
       <RouteInfo {...route} />

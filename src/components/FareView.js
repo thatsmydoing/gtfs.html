@@ -1,5 +1,5 @@
 import React from 'react';
-import {fareAttributesSchema} from '../constants';
+import {fareAttributesSchema} from '../gtfs/schema';
 import {getFare} from '../selectors';
 import InfoTable from './InfoTable';
 import Link from './Link';

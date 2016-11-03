@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
-import {stopTimeSchema, pickupTypes, dropOffTypes} from '../constants';
 import {formatTime, parseTime} from '../format';
-import {filterSchema, renderEntries} from './InfoTable';
+import {
+  stopTimeSchema,
+  pickupTypes,
+  dropOffTypes,
+  filter as filterSchema
+} from '../gtfs/schema';
+import {renderEntries} from './InfoTable';
 import TimeScrubber from './TimeScrubber';
 
 const displaySchema = filterSchema(stopTimeSchema, [

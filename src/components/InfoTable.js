@@ -1,5 +1,6 @@
 import React from 'react';
 import {parseDate} from '../format';
+import {fields} from '../gtfs/schema';
 import Color from './Color';
 import ServiceItem from './ServiceItem';
 import Link from './Link';
@@ -73,24 +74,8 @@ function renderItem(item, schema, object) {
   return item;
 }
 
-// TODO factor out of InfoTable
-export function filterSchema(schema, filter) {
-  let keys;
-  if(Array.isArray(filter)) {
-    keys = filter;
-  }
-  else {
-    keys = Object.keys(schema).filter(filter);
-  }
-  let newSchema = {};
-  keys.forEach(key => {
-    newSchema[key] = schema[key];
-  });
-  return newSchema;
-}
-
 export function renderEntries(object, schema, View = Entry) {
-  return Object.keys(schema).map(key =>
+  return fields(schema).map(key =>
     <View name={schema[key].name} key={key}>
       {renderItem(object[key], schema[key], object)}
     </View>

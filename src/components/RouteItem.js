@@ -1,5 +1,5 @@
 import React from 'react';
-import {routeTypes} from '../constants';
+import {routeTypes} from '../gtfs/schema';
 import Link from './Link';
 
 export default function RouteItem(props) {

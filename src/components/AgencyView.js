@@ -1,5 +1,5 @@
 import React from 'react';
-import {agencySchema} from '../constants';
+import {agencySchema} from '../gtfs/schema';
 import InfoTable from './InfoTable';
 import RouteList from './RouteList';
 
