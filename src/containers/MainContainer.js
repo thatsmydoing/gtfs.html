@@ -9,6 +9,7 @@ import BlockView from '../components/BlockView';
 import FareView from '../components/FareView';
 import ZoneView from '../components/ZoneView';
 import StopView from '../components/StopView';
+import ShapeView from '../components/ShapeView';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
@@ -20,7 +21,8 @@ const componentMap = {
   block: BlockView,
   fare: FareView,
   zone: ZoneView,
-  stop: StopView
+  stop: StopView,
+  shape: ShapeView
 }
 
 function component(props) {

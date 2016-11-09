@@ -429,6 +429,29 @@ export const stopSchema = {
   }
 }
 
+export const shapeSchema = {
+  shape_id: {
+    name: 'ID'
+  },
+  shape_pt_lat: {
+    name: 'Latitude',
+    type: 'latitude'
+  },
+  shape_pt_lon: {
+    name: 'Longitude',
+    type: 'longitude'
+  },
+  shape_pt_sequence: {
+    name: 'Shape Sequence',
+    type: 'uint'
+  },
+  shape_dist_traveled: {
+    name: 'Shape Distance Traveled',
+    type: 'float',
+    optional: true
+  }
+}
+
 export const schema = {
   agency: agencySchema,
   calendar: calendarSchema,
@@ -437,7 +460,7 @@ export const schema = {
   fare_rules: fareRulesSchema,
   frequencies: frequencySchema,
   routes: routeSchema,
-  shapes: {}, // TODO
+  shapes: shapeSchema,
   stops: stopSchema,
   stop_times: stopTimeSchema,
   trips: tripSchema

@@ -60,3 +60,10 @@ export function getStop(feed, stop_id) {
   }
   return stop;
 }
+
+export function getShape(feed, shape_id) {
+  let shape = { shape_id };
+  shape.points = getIn(feed, 'shape.points', shape_id);
+  shape.trips = getIn(feed, 'shape.trips', shape_id);
+  return shape;
+}
