@@ -52,6 +52,11 @@ export const transferTypes = {
   '': 'Unlimited transfers'
 }
 
+export const locationTypes = [
+  'Stop',
+  'Station'
+]
+
 export const routeSchema = {
   agency_id: {
     name: 'Agency',
@@ -368,6 +373,62 @@ export const fareAttributesSchema = {
   }
 }
 
+export const stopSchema = {
+  stop_id: {
+    name: 'ID',
+    pk: true
+  },
+  stop_code: {
+    name: 'Code',
+    optional: true
+  },
+  stop_name: {
+    name: 'Name',
+  },
+  stop_desc: {
+    name: 'Description',
+    optional: true
+  },
+  stop_lat: {
+    name: 'Latitude',
+    type: 'latitude'
+  },
+  stop_lon: {
+    name: 'Longitude',
+    type: 'longitude'
+  },
+  zone_id: {
+    name: 'Zone',
+    optional: true,
+    relation: 'zone'
+  },
+  stop_url: {
+    name: 'URL',
+    optional: true,
+    type: 'url'
+  },
+  location_type: {
+    name: 'Location Type',
+    optional: true,
+    type: locationTypes
+  },
+  parent_station: {
+    name: 'Parent Station',
+    optional: true,
+    relation: 'stop'
+  },
+  stop_timezone: {
+    name: 'Timezone',
+    optional: true,
+    type: 'timezone'
+  },
+  wheelchair_boarding: {
+    name: 'Wheelchair Accessibility',
+    optional: true,
+    type: wheelchairTypes
+  }
+}
+
 export const schema = {
   agency: agencySchema,
   calendar: calendarSchema,
@@ -377,7 +438,7 @@ export const schema = {
   frequencies: frequencySchema,
   routes: routeSchema,
   shapes: {}, // TODO
-  stops: {stop_id: {pk: true}}, // TODO
+  stops: stopSchema,
   stop_times: stopTimeSchema,
   trips: tripSchema
 }

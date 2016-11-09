@@ -3,6 +3,7 @@ import {parseDate} from '../format';
 import {fields} from '../gtfs/schema';
 import Color from './Color';
 import ServiceItem from './ServiceItem';
+import StopItem from './StopItem';
 import Link from './Link';
 
 export default function InfoTable(props) {
@@ -41,6 +42,9 @@ function renderItem(item, schema, object) {
   if(schema.relation) {
     if(schema.relation == 'service' && object.service) {
       return <ServiceItem {...object.service} />
+    }
+    if(schema.relation == 'stop' && object.stop) {
+      return <StopItem {...object.stop} />
     }
     return <Link type={schema.relation} id={item} />
   }

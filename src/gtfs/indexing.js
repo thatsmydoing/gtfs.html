@@ -26,6 +26,28 @@ function buildIndex(data, specs) {
   });
 }
 
+function buildStopTripsIndex(data) {
+  let index = {};
+  data.stop_times.forEach(s => {
+    let key = s.stop_id;
+    let tripIndex = data.indices.trips[s.trip_id];
+    if(index[key]) {
+      let set = index[key];
+      if(set.indexOf(tripIndex) < 0) {
+        set.push(tripIndex);
+      }
+    }
+    else {
+      index[key] = [tripIndex];
+    }
+  });
+  data.indices['stop.trips'] = index;
+  data.indexSpecs['stop.trips'] = {
+    table: 'trips',
+    multiple: true
+  };
+}
+
 export function index(data) {
   console.log('Building indices...');
   console.time('indexing');
@@ -59,6 +81,7 @@ export function index(data) {
   indexSpec('trip.frequencies', 'frequencies', 'trip_id', true);
 
   buildIndex(data, specs);
+  buildStopTripsIndex(data);
   console.timeEnd('indexing');
   console.log('Completed building indices.');
   return data;

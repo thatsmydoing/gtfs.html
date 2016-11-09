@@ -35,6 +35,9 @@ export function getTimetable(feed, trip_id) {
   let timetable = { trip_id };
   timetable.stopTimes = getIn(feed, 'trip.stopTimes', trip_id);
   timetable.frequencies = getIn(feed, 'trip.frequencies', trip_id);
+  timetable.stopTimes.map(stopTime => {
+    stopTime.stop = getIn(feed, 'stops', stopTime.stop_id);
+  });
   return timetable;
 }
 
@@ -48,4 +51,12 @@ export function getZone(feed, zone_id) {
   let zone = { zone_id };
   zone.stops = getIn(feed, 'zone.stops', zone_id);
   return zone;
+}
+
+export function getStop(feed, stop_id) {
+  let stop = getIn(feed, 'stops', stop_id);
+  if(stop) {
+    stop.trips = getIn(feed, 'stop.trips', stop_id);
+  }
+  return stop;
 }

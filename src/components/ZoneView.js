@@ -1,11 +1,11 @@
 import React from 'react';
 import {getZone} from '../selectors';
-import Link from './Link';
+import StopItem from './StopItem';
 
 export default function ZoneView(props) {
   let zone = getZone(props.feed, props.id);
   let stops = zone.stops.map(s => {
-    return <li key={s.stop_id}>{s.stop_id}</li>
+    return <li key={s.stop_id}><StopItem {...s} /></li>
   });
   return (
     <div className="block">
