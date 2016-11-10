@@ -453,17 +453,44 @@ export const shapeSchema = {
 }
 
 export const schema = {
-  agency: agencySchema,
-  calendar: calendarSchema,
-  calendar_dates: calendarDatesSchema,
-  fare_attributes: fareAttributesSchema,
-  fare_rules: fareRulesSchema,
-  frequencies: frequencySchema,
-  routes: routeSchema,
-  shapes: shapeSchema,
-  stops: stopSchema,
-  stop_times: stopTimeSchema,
-  trips: tripSchema
+  agency: {
+    schema: agencySchema
+  },
+  calendar: {
+    schema: calendarSchema
+  },
+  calendar_dates: {
+    schema: calendarDatesSchema,
+    optional: true
+  },
+  fare_attributes: {
+    schema: fareAttributesSchema,
+    optional: true
+  },
+  fare_rules: {
+    schema: fareRulesSchema,
+    optional: true
+  },
+  frequencies: {
+    schema: frequencySchema,
+    optional: true
+  },
+  routes: {
+    schema: routeSchema
+  },
+  shapes: {
+    schema: shapeSchema,
+    optional: true
+  },
+  stops: {
+    schema: stopSchema
+  },
+  stop_times: {
+    schema: stopTimeSchema
+  },
+  trips: {
+    schema: tripSchema
+  }
 }
 
 export function fields(schema) {

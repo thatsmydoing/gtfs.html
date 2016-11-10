@@ -2,6 +2,7 @@ import * as Papa from 'papaparse';
 import JSZip from 'jszip';
 import {schema, fields} from './schema';
 import {index} from './indexing';
+import {message, validate} from './validation';
 
 function parseEntry(table, entry) {
   return new Promise((resolve, reject) => {
@@ -40,19 +41,30 @@ function parseEntry(table, entry) {
 }
 
 export function load(file) {
-  let db = {};
+  let db = {
+    errors: []
+  };
   return JSZip.loadAsync(file).then(zip => {
     return Object.keys(schema).reduce((acc, table) => {
       let entry = zip.file(table+'.txt');
       if(entry != null) {
         return acc.then(_ => parseEntry(table, entry).then(list => db[table] = list));
       }
+      else if(!schema[table].optional) {
+        db[table] = [];
+        db.errors.push(message('error', table+'.txt', 0, 'Required file missing'));
+        return acc;
+      }
       else {
         db[table] = [];
         return acc;
       }
     }, Promise.resolve());
-  }).then(_ => index(db))
+  }).then(_ => {
+    validate(db, schema);
+    index(db);
+    return db;
+  })
 }
 
 export function save(db) {

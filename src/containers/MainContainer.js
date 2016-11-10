@@ -10,6 +10,7 @@ import FareView from '../components/FareView';
 import ZoneView from '../components/ZoneView';
 import StopView from '../components/StopView';
 import ShapeView from '../components/ShapeView';
+import ErrorList from '../components/ErrorList';
 import UploadContainer from './UploadContainer';
 import TreeContainer from './TreeContainer';
 
@@ -47,6 +48,9 @@ function component(props) {
         <button onClick={props.onUnload}>Close</button>
       </div>
     )
+  }
+  else if(props.path.type == 'errors') {
+    return <ErrorList feed={props.data} />
   }
   else if(componentMap[props.path.type]) {
     let View = componentMap[props.path.type];

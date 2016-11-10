@@ -65,7 +65,7 @@ export function index(data) {
   }
 
   Object.keys(schema).forEach(table => {
-    let s = schema[table];
+    let s = schema[table].schema;
     let pk = fields(s).find(k => s[k].pk);
     if(pk) {
       indexSpec(table, table, pk);
