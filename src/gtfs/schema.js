@@ -57,6 +57,13 @@ export const locationTypes = [
   'Station'
 ]
 
+export const transferPointTypes = [
+  'This is a recommended transfer point',
+  'The departing vehicle will wait for the arriving one before departing',
+  'This transfer requires a minimum amount of time to transfer',
+  'Transfers are not possible between routes at this location'
+]
+
 export const routeSchema = {
   agency_id: {
     name: 'Agency',
@@ -452,6 +459,52 @@ export const shapeSchema = {
   }
 }
 
+export const feedInfoSchema = {
+  feed_publisher_name: {
+    name: 'Publisher Name',
+  },
+  feed_publisher_url: {
+    name: 'Publisher URL',
+    type: 'url'
+  },
+  feed_lang: {
+    name: 'Language',
+    type: 'language'
+  },
+  feed_start_date: {
+    name: 'Start Date',
+    optional: true
+  },
+  feed_end_date: {
+    name: 'End Date',
+    optional: true
+  },
+  feed_version: {
+    name: 'Version',
+    optional: true
+  }
+}
+
+export const transferSchema = {
+  from_stop_id: {
+    name: 'From',
+    relation: 'stop'
+  },
+  to_stop_id: {
+    name: 'To',
+    relation: 'stop'
+  },
+  transfer_type: {
+    name: 'Transfer Type',
+    type: transferPointTypes
+  },
+  min_transfer_time: {
+    name: 'Minimum transfer time',
+    optional: true,
+    type: 'uint'
+  }
+}
+
 export const schema = {
   agency: {
     schema: agencySchema
@@ -469,6 +522,10 @@ export const schema = {
   },
   fare_rules: {
     schema: fareRulesSchema,
+    optional: true
+  },
+  feed_info: {
+    schema: feedInfoSchema,
     optional: true
   },
   frequencies: {
@@ -490,6 +547,10 @@ export const schema = {
   },
   trips: {
     schema: tripSchema
+  },
+  transfers: {
+    schema: transferSchema,
+    optional: true
   }
 }
 

@@ -155,6 +155,12 @@ function validateRoutes(routes, log) {
   });
 }
 
+function validateFeedInfo(feed_info, log) {
+  if(feed_info.length > 1) {
+    log('warning', 'feed_info.txt', 0, 'There are multiple feed_info entries');
+  }
+}
+
 export function validate(data, schema) {
   console.log('Validating...');
   console.time('validating');
@@ -169,6 +175,7 @@ export function validate(data, schema) {
   }
   validateAgency(data.agency, log);
   validateRoutes(data.routes, log);
+  validateFeedInfo(data.feed_info, log);
   console.timeEnd('validating');
   if(data.errors.length > 0) {
     console.log(data.errors.length + ' error(s) found');
