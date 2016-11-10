@@ -134,3 +134,20 @@
   top: 0;
   cursor: pointer;
 }
+
+table.errors {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.errors .warning {
+  background-color: lightgoldenrodyellow;
+}
+
+.errors .error {
+  background-color: salmon;
+}
+
+.errors .location {
+  width: 10em;
+}
