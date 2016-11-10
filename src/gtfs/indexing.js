@@ -81,6 +81,7 @@ export function index(data) {
   indexSpec('trip.frequencies', 'frequencies', 'trip_id', true);
   indexSpec('shape.points', 'shapes', 'shape_id', true);
   indexSpec('shape.trips', 'trips', 'shape_id', true);
+  indexSpec('agency.routes', 'routes', 'agency_id', true);
 
   buildIndex(data, specs);
   buildStopTripsIndex(data);

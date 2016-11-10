@@ -1,5 +1,6 @@
 import React from 'react';
 import {agencySchema} from '../gtfs/schema';
+import {getAgency} from '../selectors';
 import InfoTable from './InfoTable';
 import RouteList from './RouteList';
 
@@ -9,21 +10,8 @@ function AgencyInfo(props) {
   )
 }
 
-function getAgency(props) {
-  let id = props.id;
-  let feed = props.feed;
-  let agency = feed.agency.find(agency => agency.agency_id == id);
-  if(agency == undefined) {
-    return {};
-  }
-  else {
-    agency.routes = feed.routes.filter(route => route.agency_id == id);
-    return agency;
-  }
-}
-
-export default function AgencyView(props) {
-  let agency = getAgency(props);
+export default function AgencyView({feed, id}) {
+  let agency = getAgency(feed, id);
   return (
     <div>
       <AgencyInfo {...agency} />
