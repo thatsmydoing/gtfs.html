@@ -1,6 +1,5 @@
 import React from 'react';
 import {parseDate} from '../format';
-import {fields} from '../gtfs/schema';
 import Color from './Color';
 import ServiceItem from './ServiceItem';
 import StopItem from './StopItem';
@@ -79,7 +78,7 @@ function renderItem(item, schema, object) {
 }
 
 export function renderEntries(object, schema, View = Entry) {
-  return fields(schema).map(key =>
+  return Object.keys(schema).map(key =>
     <View name={schema[key].name} key={key}>
       {renderItem(object[key], schema[key], object)}
     </View>

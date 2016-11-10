@@ -554,17 +554,13 @@ export const schema = {
   }
 }
 
-export function fields(schema) {
-  return Object.keys(schema);
-}
-
 export function filter(schema, filter) {
   let keys;
   if(Array.isArray(filter)) {
     keys = filter;
   }
   else {
-    keys = fields(schema).filter(filter);
+    keys = Object.keys(schema).filter(filter);
   }
   let newSchema = {};
   keys.forEach(key => {

@@ -1,4 +1,3 @@
-import {fields} from './schema';
 import {difference, has, isPlainObject} from 'lodash';
 import {daysPerMonth} from '../constants';
 
@@ -100,7 +99,7 @@ function validateItem(item, line, col, field, schema, log) {
 }
 
 function validateRow(row, line, schema, log) {
-  let keys = fields(schema);
+  let keys = Object.keys(schema);
   keys.forEach((key, col) => {
     let itemSchema = schema[key];
     if(row[key] != undefined) {
@@ -119,7 +118,7 @@ function validate1(data, schema, log) {
   }
 
   let row = data[0];
-  let keys = fields(schema);
+  let keys = Object.keys(schema);
   let headers = Object.keys(row);
   let diff = difference(headers, keys);
   diff.forEach(key => {

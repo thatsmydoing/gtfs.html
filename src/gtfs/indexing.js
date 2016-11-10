@@ -1,4 +1,4 @@
-import {schema, fields} from './schema';
+import {schema} from './schema';
 
 function buildIndex(data, specs) {
   data.indices = {};
@@ -66,7 +66,7 @@ export function index(data) {
 
   Object.keys(schema).forEach(table => {
     let s = schema[table].schema;
-    let pk = fields(s).find(k => s[k].pk);
+    let pk = Object.keys(s).find(k => s[k].pk);
     if(pk) {
       indexSpec(table, table, pk);
     }

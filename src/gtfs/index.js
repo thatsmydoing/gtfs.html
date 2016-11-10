@@ -1,6 +1,6 @@
 import * as Papa from 'papaparse';
 import JSZip from 'jszip';
-import {schema, fields} from './schema';
+import {schema} from './schema';
 import {index} from './indexing';
 import {message, validate} from './validation';
 
