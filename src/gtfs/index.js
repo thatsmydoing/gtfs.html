@@ -42,20 +42,22 @@ function parseEntry(table, entry) {
 
 export function load(file) {
   let db = {
-    errors: []
+    errors: [],
+    stats: {}
   };
   return JSZip.loadAsync(file).then(zip => {
     return Object.keys(schema).reduce((acc, table) => {
       let entry = zip.file(table+'.txt');
       if(entry != null) {
-        return acc.then(_ => parseEntry(table, entry).then(list => db[table] = list));
-      }
-      else if(!schema[table].optional) {
-        db[table] = [];
-        db.errors.push(message('error', table+'.txt', 0, 'Required file missing'));
-        return acc;
+        return acc.then(_ => parseEntry(table, entry).then(list => {
+          db[table] = list;
+          db.stats[table] = list.length;
+        }));
       }
       else {
+        if(!schema[table].optional) {
+          db.errors.push(message('error', table+'.txt', 0, 'Required file missing'));
+        }
         db[table] = [];
         return acc;
       }
