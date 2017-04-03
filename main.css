@@ -1,3 +1,16 @@
+.dashboard {
+  display: flex;
+  flex-direction: row;
+}
+
+.dashboard .stats-column {
+  flex: 1;
+}
+
+.dashboard .errors-column {
+  flex: 2;
+}
+
 .dropzone {
   display: flex;
   flex-direction: column;

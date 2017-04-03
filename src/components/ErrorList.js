@@ -10,19 +10,16 @@ export default function ErrorList(props) {
     )
   });
   return (
-    <div>
-      <h3>Errors</h3>
-      <table className="errors">
-        <thead>
-          <tr>
-            <th className="location">Location</th>
-            <th className="message">Error</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </table>
-    </div>
+    <table className="errors">
+      <thead>
+        <tr>
+          <th className="location">Location</th>
+          <th className="message">Error</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows}
+      </tbody>
+    </table>
   )
 }

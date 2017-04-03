@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {unloadFile} from '../actions';
+import Link from '../components/Link';
+import RouteList from '../components/RouteList';
 import RouteView from '../components/RouteView';
 import AgencyView from '../components/AgencyView';
 import TripView from '../components/TripView';
@@ -12,8 +14,8 @@ import StopView from '../components/StopView';
 import ShapeView from '../components/ShapeView';
 import StatsView from '../components/StatsView';
 import ErrorList from '../components/ErrorList';
+import DashboardView from '../components/DashboardView';
 import UploadContainer from './UploadContainer';
-import TreeContainer from './TreeContainer';
 
 const componentMap = {
   route: RouteView,
@@ -45,16 +47,15 @@ function component(props) {
   else if(props.path == undefined) {
     return (
       <div>
-        <TreeContainer />
+        <DashboardView feed={props.data} />
+        <Link type="routes">Routes</Link>
+        {' '}
         <button onClick={props.onUnload}>Close</button>
       </div>
     )
   }
-  else if(props.path.type == 'stats') {
-    return <StatsView feed={props.data} />
-  }
-  else if(props.path.type == 'errors') {
-    return <ErrorList feed={props.data} />
+  else if(props.path.type == 'routes') {
+    return <RouteList routes={props.data.routes} />
   }
   else if(componentMap[props.path.type]) {
     let View = componentMap[props.path.type];
