@@ -79,6 +79,11 @@ function checkTime(time) {
 
 function validateItem(item, line, col, field, schema, log) {
   let {type} = schema;
+  let trimmed = item.trim();
+  if(trimmed != item) {
+    log('warning', line, 'Value has excess whitespace: \''+item+'\' for '+field);
+  }
+  item = trimmed;
   if(Array.isArray(type)) {
     let index = parseInt(item);
     if(index < 0 || index >= type.length) {
