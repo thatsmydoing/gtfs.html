@@ -21,7 +21,7 @@ const typeChecks = {
 function checkRegex(regex) {
   return item => {
     if(!regex.test(item)) {
-      return 'Invalid value';
+      return "'"+item+"'";
     }
   }
 }
@@ -30,11 +30,11 @@ function checkCoords(min, max) {
   return coord => {
     let result = floatRegex.test(coord);
     if(!result) {
-      return 'Invalid coordinate value';
+      return 'not a float: '+coord;
     }
     let value = parseFloat(coord);
     if(value < min || value > max) {
-      return 'Coordinate out of bounds';
+      return 'out of bounds: '+coord;
     }
   }
 }
@@ -64,7 +64,7 @@ function checkDate(date) {
 function checkTime(time) {
   let result = timeRegex.exec(time);
   if(result == null) {
-    return 'Invalid time: '+time;
+    return 'invalid time: '+time;
   }
 
   let [, hour, minute, second] = result;
@@ -73,7 +73,7 @@ function checkTime(time) {
   second = parseInt(second);
 
   if(minute > 60 || second > 60) {
-    return 'Invalid time: '+time;
+    return 'invalid time: '+time;
   }
 }
 
