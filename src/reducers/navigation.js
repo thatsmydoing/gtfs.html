@@ -31,17 +31,12 @@ export function register(store) {
 }
 
 export function link(type, id) {
-  if(!type && !id) {
-    return '';
-  }
-  else {
-    let path = '#';
-    if(type) {
-      path += type;
-      if(id) {
-        path += '/'+id;
-      }
+  let path = '#';
+  if(type) {
+    path += type;
+    if(id) {
+      path += '/'+id;
     }
-    return path;
   }
+  return path;
 }

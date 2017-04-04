@@ -29,7 +29,7 @@ const componentMap = {
   shape: ShapeView
 }
 
-function component(props) {
+function content(props) {
   if(props.loading) {
     return <p>Loading file...</p>
   }
@@ -45,14 +45,7 @@ function component(props) {
     return <UploadContainer />
   }
   else if(props.path == undefined) {
-    return (
-      <div>
-        <DashboardView feed={props.data} />
-        <Link type="routes">Routes</Link>
-        {' '}
-        <button onClick={props.onUnload}>Close</button>
-      </div>
-    )
+    return <DashboardView feed={props.data} />
   }
   else if(props.path.type == 'routes') {
     return <RouteList routes={props.data.routes} />
@@ -63,6 +56,24 @@ function component(props) {
   }
   else {
     return <div>Not Found</div>
+  }
+}
+
+function component(props) {
+  if(props.data != null) {
+    return (
+      <div>
+        <div className="navigation">
+          <Link type="">Home</Link>
+          <Link type="routes">Routes</Link>
+          <a href="#" onClick={props.onUnload}>Close</a>
+        </div>
+        {content(props)}
+      </div>
+    )
+  }
+  else {
+    return content(props);
   }
 }
 

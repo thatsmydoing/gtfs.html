@@ -1,3 +1,12 @@
+.navigation {
+  display: flex;
+  flex-direction: row;
+}
+
+.navigation a {
+  margin: 0em 0.2em;
+}
+
 .dashboard {
   display: flex;
   flex-direction: row;
