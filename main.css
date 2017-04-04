@@ -164,3 +164,35 @@ table.errors {
 .errors .location {
   width: 10em;
 }
+
+.shape-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.shape-container .trip-column {
+  flex: 1;
+}
+
+.shape-container .map-column {
+  flex: 1;
+  height: 100%;
+}
+
+.map {
+  height: 100%;
+  width: 100%;
+}
+
+.stop {
+  display: flex;
+}
+
+.stop .info-column {
+  flex: 1;
+}
+
+.stop .map-column {
+  flex: 1;
+}

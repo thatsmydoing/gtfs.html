@@ -5,6 +5,7 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import reducer from './reducers';
 import * as navigation from './reducers/navigation';
+import * as google from './reducers/google';
 import {load, serialize} from './debug';
 import App from './components/App';
 
@@ -12,6 +13,7 @@ load().then(init => {
   init.navigation = navigation.getInitialState();
   let store = createStore(reducer, init, applyMiddleware(thunk, serialize));
   navigation.register(store);
+  google.register(store);
 
   ReactDOM.render(
     <Provider store={store}>
