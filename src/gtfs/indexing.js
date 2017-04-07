@@ -93,7 +93,10 @@ export function index(data) {
 export function getIn(data, indexName, id) {
   let spec = data.indexSpecs[indexName];
   let index = data.indices[indexName];
-  const get = id => data[spec.table][id];
+  const get = id => {
+    let item = data[spec.table][id];
+    return {...item};
+  }
   if(spec.multiple) {
     if(index[id] != undefined) {
       return index[id].map(get);
