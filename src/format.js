@@ -1,3 +1,5 @@
+import {daysOfWeek} from './constants';
+
 export function parseDate(date) {
   let year = date.substr(0, 4);
   let month = date.substr(4, 2);
@@ -42,4 +44,26 @@ export function pad(num, length, pad = '0') {
     }
   }
   return result;
+}
+
+export function formatDaysOfWeek(service) {
+  function format(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)+'s';
+  }
+
+  let days = daysOfWeek.filter(dow => service[dow] == 1)
+  let dows;
+  if(days.length == 7) {
+    dows = 'Everyday';
+  }
+  else if(days[0] == 'sunday' && days[1] == 'saturday') {
+    dows = 'Weekends';
+  }
+  else if(days[0] == 'monday' && days[4] == 'friday') {
+    dows = 'Weekdays';
+  }
+  else {
+    dows = days.map(format).join(', ');
+  }
+  return dows;
 }
