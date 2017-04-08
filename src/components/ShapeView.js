@@ -7,7 +7,10 @@ import Polyline from './map/Polyline';
 export default function ShapeView({feed, id}) {
   let shape = getShape(feed, id);
   let points = shape.points.map(point => {
-    return {lat: point.shape_pt_lat, lng: point.shape_pt_lon};
+    return {
+      lat: parseFloat(point.shape_pt_lat),
+      lng: parseFloat(point.shape_pt_lon)
+    };
   });
   return (
     <div className="shape">
