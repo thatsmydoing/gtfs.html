@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import {parseTime, formatTime, formatDuration} from '../format';
-
-function justify(time, interval) {
-  return Math.floor(time / interval) * interval;
-}
+import {snapToInterval, getActualFrequencyBounds} from '../util';
 
 function ScrubberBackground(props) {
   let {segments, percentage, totalDuration} = props;
@@ -66,10 +63,10 @@ export default class TimeScrubber extends Component {
       let segment = this.segments.find(segment => segment.start <= time && time < segment.end);
       if(segment.headway) {
         if(this.props.exact) {
-          time = this.startTime + justify(time - this.startTime, segment.headway);
+          time = this.startTime + snapToInterval(time - this.startTime, segment.headway);
         }
         else {
-          time = justify(time, 60);
+          time = snapToInterval(time, 60);
         }
       }
       else if(time > segment.start + segment.duration / 2) {
@@ -107,32 +104,22 @@ export default class TimeScrubber extends Component {
     let segments = [];
     let startTime = parseTime(frequencies[0].start_time);
     let endTime = frequencies.reduce((lastEnd, f) => {
-      let s = parseTime(f.start_time);
-      let e = parseTime(f.end_time);
-      if(this.props.exact) {
-        let exactEnd = justify(e, f.headway_secs);
-        if(e == exactEnd) {
-          e = e - f.headway_secs;
-        }
-        else {
-          e = exactEnd;
-        }
-      }
-      if(lastEnd && lastEnd != s) {
+      let { startTime, endTime } = getActualFrequencyBounds(f);
+      if(lastEnd && lastEnd != startTime) {
         // filler segment
         segments.push({
           start: lastEnd,
-          end: s,
-          duration: s - lastEnd
+          end: startTime,
+          duration: startTime - lastEnd
         });
       }
       segments.push({
-        start: s,
-        end: e,
+        start: startTime,
+        end: endTime,
         headway: f.headway_secs,
-        duration: e - s
+        duration: endTime - startTime
       });
-      return e;
+      return endTime;
     }, null);
     segments.push({
       start: endTime,
