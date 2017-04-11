@@ -165,6 +165,54 @@ function validateFeedInfo(feed_info, log) {
   }
 }
 
+function updateTripStopTime(trip, stop_time, line) {
+  let seq = parseInt(stop_time.stop_sequence);
+  let present = !!stop_time.arrival_time && !!stop_time.departure_time;
+  if(trip == null) {
+    return {
+      max: seq,
+      max_present: present,
+      max_line: line,
+      min: seq,
+      min_present: present,
+      min_line: line,
+    }
+  }
+  if(trip.max < stop_time.stop_sequence) {
+    trip.max = seq;
+    trip.max_present = present;
+    trip.max_line = line;
+  }
+  if(trip.min > stop_time.stop_sequence) {
+    trip.min = seq;
+    trip.min_present = present;
+    trip.min_line = line;
+  }
+  return trip;
+}
+
+function validateStopTimes(stop_times, log) {
+  let trips = {};
+  stop_times.forEach((stop_time, line) => {
+    let trip = trips[stop_time.trip_id];
+    trips[stop_time.trip_id] = updateTripStopTime(trip, stop_time, line);
+    if(stop_time.timepoint) {
+      if(!stop_time.arrival_time || !stop_time.departure_time) {
+        log('error', 'stop_times.txt', line+1, 'Timepoint must have arrival_time and departure_time present');
+      }
+    }
+  });
+  Object.keys(trips).forEach(key => {
+    let trip = trips[key];
+    if(!trip.min_present) {
+      log('error', 'stop_times.txt', trip.min_line+1, 'First stop_time must have arrival_time and departure_time present');
+    }
+    if(!trip.max_present) {
+      log('error', 'stop_times.txt', trip.max_line+1, 'Last stop_time must have arrival_time and departure_time present');
+    }
+  });
+}
+
 export function validate(data, schema) {
   console.log('Validating...');
   console.time('validating');
@@ -180,6 +228,7 @@ export function validate(data, schema) {
   validateAgency(data.agency, log);
   validateRoutes(data.routes, log);
   validateFeedInfo(data.feed_info, log);
+  validateStopTimes(data.stop_times, log);
   console.timeEnd('validating');
   if(data.errors.length > 0) {
     console.log(data.errors.length + ' error(s) found');

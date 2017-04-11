@@ -261,11 +261,13 @@ export const stopTimeSchema = {
   },
   arrival_time: {
     name: 'Arrival Time',
-    type: 'time'
+    type: 'time',
+    optional: true
   },
   departure_time: {
     name: 'Departure Time',
-    type: 'time'
+    type: 'time',
+    optional: true
   },
   stop_id: {
     name: 'Stop',
