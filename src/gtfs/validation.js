@@ -1,7 +1,7 @@
 import {difference, has, isPlainObject} from 'lodash';
 import {daysPerMonth} from '../constants';
 
-const floatRegex = /^-?\d+(\.?\d*)$/;
+const floatRegex = /^-?\d+(\.?\d*)(e-?\d+)?$/;
 const dateRegex = /^(\d{4})(\d{2})(\d{2})$/;
 const timeRegex = /^(\d{2}):(\d{2}):(\d{2})$/;
 
