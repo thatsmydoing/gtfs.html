@@ -8,7 +8,11 @@ export function parseDate(date) {
 }
 
 export function parseTime(time) {
-  let [, h, m, s] = /(\d+):(\d+):(\d+)/.exec(time);
+  let result = /(\d+):(\d+):(\d+)/.exec(time);
+  if(result == null) {
+    return undefined;
+  }
+  let [, h, m, s] = result;
   return parseInt(h) * 3600 + parseInt(m) * 60 + parseInt(s);
 }
 
