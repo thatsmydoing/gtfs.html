@@ -60,10 +60,10 @@ export function formatDaysOfWeek(service) {
   if(days.length == 7) {
     dows = 'Everyday';
   }
-  else if(days[0] == 'sunday' && days[1] == 'saturday') {
+  else if(days.length == 2 && days[0] == 'sunday' && days[1] == 'saturday') {
     dows = 'Weekends';
   }
-  else if(days[0] == 'monday' && days[4] == 'friday') {
+  else if(days.length == 5 && days[0] == 'monday' && days[4] == 'friday') {
     dows = 'Weekdays';
   }
   else {
