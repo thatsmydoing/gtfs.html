@@ -144,6 +144,8 @@
   display: inline-block;
   height: 20px;
   margin: 2px 0px;
+  box-sizing: border-box;
+  border-left: dashed 1px gray;
 }
 
 .scrubber .thumb {
