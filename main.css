@@ -205,3 +205,46 @@ table.errors {
 .stop .map-column {
   flex: 1;
 }
+
+.trip-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0px;
+}
+
+.trip-table th.active:after {
+  content: '▼';
+}
+
+.trip-table td {
+  border: solid 1px black;
+}
+
+.trip-table .time-column {
+  border-top: none;
+  border-bottom: none;
+  position: relative;
+  width: 50%;
+  min-width: 50%;
+  max-width: 75%;
+}
+
+.trip-table tr:first-child .time-column {
+  border-top: solid 1px black;
+}
+
+.trip-table tr:last-child .time-column {
+  border-bottom: solid 1px black;
+}
+
+.timebar {
+  position: relative;
+  height: 20px;
+  background-color: lightgreen;
+  margin: 2px 0px;
+}
+
+.timebar .trail {
+  height: 20px;
+  background-color: lightgray;
+}

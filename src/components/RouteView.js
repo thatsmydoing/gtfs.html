@@ -2,7 +2,7 @@ import React from 'react';
 import {routeSchema} from '../gtfs/schema';
 import {getRoute} from '../selectors';
 import InfoTable, {Entry} from './InfoTable';
-import TripList from './TripList';
+import TripTable from './TripTable';
 
 function RouteInfo(props) {
   let sampleStyle = {
@@ -26,7 +26,7 @@ export default function RouteView({feed, id}) {
   return (
     <div>
       <RouteInfo {...route} />
-      <TripList trips={route.trips} />
+      <TripTable feed={feed} routeId={id} />
     </div>
   )
 }
