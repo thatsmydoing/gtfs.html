@@ -25,11 +25,11 @@ export function formatTime(time) {
 
 export function formatDuration(duration) {
   if(duration > 3600) {
-    let h = duration / 3600;
+    let h = Math.floor(duration / 3600);
     return h+'h'+formatDuration(duration % 3600);
   }
   else if(duration > 60) {
-    let m = duration / 60;
+    let m = Math.floor(duration / 60);
     return m+'m'+formatDuration(duration % 60);
   }
   else if(duration > 0) {
