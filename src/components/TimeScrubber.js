@@ -1,28 +1,51 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 import {parseTime, formatTime, formatDuration} from '../format';
 import {snapToInterval, getActualFrequencyBounds} from '../util';
 
-function ScrubberBackground(props) {
-  let {segments, percentage, totalDuration} = props;
-  let divs = segments.map((segment, i) => {
-    let color = 'lightgray';
-    if(segment.headway) {
-      let strength = Math.max(Math.floor(60 / segment.headway * 255), 255);
-      color = 'rgb(0,'+strength+',0)';
-    }
-    let style = {
-      width: (segment.duration / totalDuration * 100)+'%',
-      backgroundColor: color
-    }
-    let description = 'not available';
-    if(segment.headway) {
-      description = formatTime(segment.start) + ' - ' + formatTime(segment.end) + ' every '+formatDuration(segment.headway);
-    }
-    return (
-      <div key={i} className="segment" title={description} style={style} />
-    )
-  });
-  return <div>{divs}</div>
+class ScrubberBackground extends PureComponent {
+  render() {
+    let {segments, totalDuration} = this.props;
+    let {min, max} = segments.reduce((acc, segment) => {
+      if(!segment.headway) {
+        return acc;
+      }
+      else if(acc == null) {
+        return {min: segment.headway, max: segment.headway}
+      }
+      else {
+        return {
+          min: Math.min(segment.headway, acc.min),
+          max: Math.max(segment.headway, acc.max)
+        }
+      }
+    }, null);
+    let divs = segments.map((segment, i) => {
+      let color = 'lightgray';
+      if(segment.headway) {
+        let maxStrength = max - min;
+        let strength;
+        if(maxStrength == 0) {
+          strength = 255;
+        }
+        else {
+          strength = Math.floor((segment.headway - min) / maxStrength * 127 + 127);
+        }
+        color = 'rgb(0,'+strength+',0)';
+      }
+      let style = {
+        width: (segment.duration / totalDuration * 100)+'%',
+        backgroundColor: color
+      }
+      let description = 'not available';
+      if(segment.headway) {
+        description = formatTime(segment.start) + ' - ' + formatTime(segment.end) + ' every '+formatDuration(segment.headway);
+      }
+      return (
+        <div key={i} className="segment" title={description} style={style} />
+      )
+    });
+    return <div>{divs}</div>
+  }
 }
 
 export default class TimeScrubber extends Component {
