@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {find, forIn, groupBy, min, max, maxBy} from 'lodash';
+import naturalSort from 'javascript-natural-sort';
 import {getRoute, getTimetable, getService, getStop} from '../selectors';
 import {formatDuration, formatTime, formatDaysOfWeek, parseTime} from '../format';
 import {getFullBounds, getTripBounds, getActualFrequencyBounds} from '../util';
@@ -124,11 +125,23 @@ function sortByTime(a, b) {
 function sortByName(a, b) {
   let aName = a.trip_headsign || a.trip_short_name || a.trip_id;
   let bName = b.trip_headsign || b.trip_short_name || b.trip_id;
-  return aName.localeCompare(bName);
+  let value = naturalSort(aName, bName);
+  if(value == 0) {
+    return sortByTime(a, b);
+  }
+  else {
+    return value;
+  }
 }
 
 function sortByGroup(a, b) {
-  return a.group.id - b.group.id;
+  let value = a.group.id - b.group.id;
+  if(value == 0) {
+    return sortByTime(a, b);
+  }
+  else {
+    return value;
+  }
 }
 
 const sortingFunctions = {
