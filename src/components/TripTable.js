@@ -172,6 +172,12 @@ export default class TripTable extends Component {
   }
   getNewState({feed, routeId}) {
     let trips = getRoute(feed, routeId).trips;
+    if(trips.length == 0) {
+      return {
+        trips: [],
+        globalBounds: null
+      }
+    }
     trips.forEach(trip => {
       trip.timetable = getTimetable(feed, trip.trip_id);
       trip.service = getService(feed, trip.service_id);
@@ -202,6 +208,9 @@ export default class TripTable extends Component {
   }
   render() {
     let trips = this.state.trips;
+    if(trips.length == 0) {
+      return <p>No trips available</p>
+    }
     let all = this.state.globalBounds;
     trips.sort(sortingFunctions[this.state.sort]);
     let rows = trips.map((trip, index) => {
