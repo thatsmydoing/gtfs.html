@@ -12,7 +12,8 @@ class Map extends Component {
       center: {lat: -32, lng: 30},
       zoom: 9
     });
-    this.setState({ map });
+    let infoWindow = new google.maps.InfoWindow();
+    this.setState({ map, infoWindow });
   }
   componentDidUpdate() {
     let bounds = new google.maps.LatLngBounds();
@@ -33,7 +34,8 @@ class Map extends Component {
       children = React.Children.map(this.props.children, (child, index) => {
         return React.cloneElement(child, {
           ref: index,
-          map: this.state.map
+          map: this.state.map,
+          infoWindow: this.state.infoWindow
         });
       });
     }

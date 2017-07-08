@@ -2,31 +2,26 @@ import React, {Component} from 'react';
 
 export default class Marker extends Component {
   componentDidMount() {
-    let point = this.props.point;
     let marker = new google.maps.Marker({
-      position: point,
+      position: this.props.point,
+      label: this.props.label,
       map: this.props.map
     });
-
-    let bounds = new google.maps.LatLngBounds();
-    bounds.extend(point);
-
+    marker.addListener('click', () => {
+      this.props.infoWindow.setContent(this.props.content);
+      this.props.infoWindow.open(this.props.map, this._marker);
+    })
     this._marker = marker;
-    this._bounds = bounds;
   }
   componentWillReceiveProps(nextProps) {
     this._marker.setPosition(nextProps.point);
-
-    let bounds = new google.maps.LatLngBounds();
-    bounds.extend(nextProps.point);
-
-    this._bounds = bounds;
+    this._marker.setLabel(nextProps.label);
   }
   componentWillUnmount() {
     this._marker.setMap(null);
   }
   getBounds() {
-    return this._bounds;
+    return new google.maps.LatLngBounds(this.props.point, this.props.point);
   }
   render() {
     return <noscript />
