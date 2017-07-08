@@ -78,12 +78,16 @@ function checkTime(time) {
 }
 
 function validateItem(item, line, col, field, schema, log) {
+  let originalItem = item;
   let {type} = schema;
-  let trimmed = item.trim();
-  if(trimmed != item) {
+  item = item.trim();
+  if(originalItem != item) {
     log('warning', line, 'Value has excess whitespace: \''+item+'\' for '+field);
+    let match = item.match(/^"(.*)"$/);
+    if(match != null) {
+      item = match[1].replace(/""/, '"')
+    }
   }
-  item = trimmed;
   if(Array.isArray(type)) {
     let index = parseInt(item);
     if(index < 0 || index >= type.length) {
@@ -101,6 +105,9 @@ function validateItem(item, line, col, field, schema, log) {
       log('error', line, 'Invalid '+type+': '+result+' for '+field);
     }
   }
+  if(originalItem != item) {
+    return item;
+  }
 }
 
 function validateRow(row, line, schema, log) {
@@ -111,7 +118,10 @@ function validateRow(row, line, schema, log) {
       if(itemSchema.optional && row[key] == '') {
       }
       else {
-        validateItem(row[key], line, col, key, itemSchema, log);
+        let newValue = validateItem(row[key], line, col, key, itemSchema, log);
+        if(newValue != undefined) {
+          row[key] = newValue;
+        }
       }
     }
   });
