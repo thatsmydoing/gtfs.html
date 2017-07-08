@@ -116,6 +116,19 @@
   border: dashed 1px gray;
 }
 
+.trip .top-section {
+  display: flex;
+}
+
+.trip .top-section .info-section {
+  padding-right: 10px;
+}
+
+.trip .top-section .map-section {
+  flex: 1;
+  height: 400px;
+}
+
 .trip .restriction {
   border-bottom: dotted 1px black;
   cursor: help;
