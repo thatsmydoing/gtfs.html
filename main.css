@@ -255,11 +255,15 @@ table.errors {
 .timebar {
   position: relative;
   height: 20px;
-  background-color: lightgreen;
+  background-color: gold;
   margin: 2px 0px;
+}
+
+.timebar.inexact {
+  background-color: lightgreen;
 }
 
 .timebar .trail {
   height: 20px;
-  background-color: lightgray;
+  background-color: gold;
 }

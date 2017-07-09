@@ -5,7 +5,7 @@ import {snapToInterval, getActualFrequencyBounds} from '../util';
 class ScrubberBackground extends PureComponent {
   render() {
     let {segments, totalDuration} = this.props;
-    let {min, max} = segments.reduce((acc, segment) => {
+    let headwayRange = segments.reduce((acc, segment) => {
       if(!segment.headway) {
         return acc;
       }
@@ -22,13 +22,13 @@ class ScrubberBackground extends PureComponent {
     let divs = segments.map((segment, i) => {
       let color = 'lightgray';
       if(segment.headway) {
-        let maxStrength = max - min;
+        let maxStrength = headwayRange.max - headwayRange.min;
         let strength;
         if(maxStrength == 0) {
           strength = 255;
         }
         else {
-          strength = Math.floor((segment.headway - min) / maxStrength * 127 + 127);
+          strength = Math.floor((segment.headway - headwayRange.min) / maxStrength * 127 + 127);
         }
         color = 'rgb(0,'+strength+',0)';
       }
@@ -39,6 +39,10 @@ class ScrubberBackground extends PureComponent {
       let description = 'not available';
       if(segment.headway) {
         description = formatTime(segment.start) + ' - ' + formatTime(segment.end) + ' every '+formatDuration(segment.headway);
+      }
+      if(segment.trail) {
+        description = '';
+        style.backgroundColor = 'gold';
       }
       return (
         <div key={i} className="segment" title={description} style={style} />
@@ -92,11 +96,14 @@ export default class TimeScrubber extends Component {
           time = snapToInterval(time, 60);
         }
       }
+      else if(segment.trail) {
+        time = segment.start;
+      }
       else if(time > segment.start + segment.duration / 2) {
         time = segment.end;
       }
       else {
-        time = segment.start;
+        time = segment.previousStart;
       }
       percentage = Math.max(0, Math.min(1.0, (time - this.startTime) / this.duration));
 
@@ -123,6 +130,73 @@ export default class TimeScrubber extends Component {
     }
   }
   calculate(props) {
+    if(props.exact) {
+      this.calculateExact(props);
+    }
+    else {
+      this.calculateInexact(props);
+    }
+  }
+  calculateExact(props) {
+    let {frequencies, tripDuration, percentage} = props;
+    let breakpoints = [];
+    frequencies.forEach(f => {
+      let { startTime, endTime } = getActualFrequencyBounds(f);
+      let headway = parseInt(f.headway_secs);
+      for(let t = startTime; t <= endTime; t += headway) {
+        breakpoints.push(t)
+      }
+    });
+
+    let startTime = breakpoints[0];
+    let endTime = breakpoints[breakpoints.length - 1];
+
+    let segments = [];
+    breakpoints.reverse().reduce((lastStart, t) => {
+      if(lastStart == null) {
+        segments.push({
+          start: t,
+          end: t + tripDuration,
+          duration: tripDuration,
+          trail: true
+        });
+      }
+      else if(t + tripDuration < lastStart) {
+        segments.push({
+          start: t + tripDuration,
+          end: lastStart,
+          duration: lastStart - t - tripDuration,
+          previousStart: t
+        });
+        segments.push({
+          start: t,
+          end: t + tripDuration,
+          duration: tripDuration,
+          trail: true
+        });
+      }
+      else {
+        segments.push({
+          start: t,
+          end: lastStart,
+          duration: lastStart - t,
+          trail: true
+        });
+      }
+      return t;
+    }, null);
+    segments.reverse();
+
+    let duration = endTime - startTime;
+    let totalDuration = duration + tripDuration;
+
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.segments = segments;
+    this.duration = duration;
+    this.totalDuration = totalDuration;
+  }
+  calculateInexact(props) {
     let {frequencies, tripDuration, percentage} = props;
     let segments = [];
     let startTime = parseTime(frequencies[0].start_time);
@@ -130,11 +204,29 @@ export default class TimeScrubber extends Component {
       let { startTime, endTime } = getActualFrequencyBounds(f);
       if(lastEnd && lastEnd != startTime) {
         // filler segment
-        segments.push({
-          start: lastEnd,
-          end: startTime,
-          duration: startTime - lastEnd
-        });
+        let fillerDuration = startTime - lastEnd;
+        if(tripDuration > fillerDuration) {
+          segments.push({
+            start: lastEnd,
+            end: startTime,
+            duration: fillerDuration,
+            trail: true
+          });
+        }
+        else {
+          segments.push({
+            start: lastEnd,
+            end: lastEnd + tripDuration,
+            duration: tripDuration,
+            trail: true
+          });
+          segments.push({
+            start: lastEnd + tripDuration,
+            end: startTime,
+            duration: fillerDuration - tripDuration,
+            previousStart: lastEnd
+          });
+        }
       }
       segments.push({
         start: startTime,
@@ -147,7 +239,8 @@ export default class TimeScrubber extends Component {
     segments.push({
       start: endTime,
       end: endTime + tripDuration,
-      duration: tripDuration
+      duration: tripDuration,
+      trail: true
     });
     let duration = endTime - startTime;
     let totalDuration = duration + tripDuration;

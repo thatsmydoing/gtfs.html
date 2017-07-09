@@ -14,6 +14,7 @@ function SimpleTimeBar({label, all, startTime, lastStartTime, endTime}) {
     width: (duration / globalDuration * 100)+'%',
     left: (offset / globalDuration * 100)+'%'
   }
+  let className = "timebar";
   let inner = null;
   if(lastStartTime) {
     let innerOffset = lastStartTime - all.startTime - offset;
@@ -21,9 +22,10 @@ function SimpleTimeBar({label, all, startTime, lastStartTime, endTime}) {
       marginLeft: (innerOffset / duration * 100)+'%'
     }
     inner = <div className="trail" style={innerStyle} />
+    className = "timebar inexact";
   }
   return (
-    <div className="timebar" title={label} style={style}>
+    <div className={className} title={label} style={style}>
       {inner}
     </div>
   )
@@ -34,20 +36,39 @@ function TimeBar({all, stopTimes, frequencies}) {
     let duration = parseTime(stopTimes[stopTimes.length - 1].arrival_time) - parseTime(stopTimes[0].departure_time);
     let timebars = frequencies.map((f, index) => {
       let { startTime, endTime } = getActualFrequencyBounds(f);
-      let numTrips = Math.floor((endTime - startTime) / f.headway_secs) + 1;
-      if(f.exact_times != 1) {
-        numTrips = '~'+numTrips;
+      if(f.exact_times == 1 && duration < f.headway_secs) {
+        let simpleBars = [];
+        let t = startTime;
+        while(t <= endTime) {
+          let label = formatTime(t)+' - '+formatTime(t+duration)+' ('+formatDuration(duration)+')';
+          simpleBars.push(
+            <SimpleTimeBar
+              key={t}
+              label={label}
+              all={all}
+              startTime={t}
+              endTime={t+duration} />
+          )
+          t += parseInt(f.headway_secs);
+        }
+        return simpleBars;
       }
-      let label = formatTime(startTime)+' - '+formatTime(endTime)+' ('+formatDuration(duration)+') '+numTrips+' trips every '+formatDuration(f.headway_secs);
-      return (
-        <SimpleTimeBar
-          key={index}
-          label={label}
-          all={all}
-          startTime={startTime}
-          lastStartTime={endTime}
-          endTime={endTime + duration} />
-      )
+      else {
+        let numTrips = Math.floor((endTime - startTime) / f.headway_secs) + 1;
+        if(f.exact_times != 1) {
+          numTrips = '~'+numTrips;
+        }
+        let label = formatTime(startTime)+' - '+formatTime(endTime)+' ('+formatDuration(duration)+') '+numTrips+' trips every '+formatDuration(f.headway_secs);
+        return (
+          <SimpleTimeBar
+            key={index}
+            label={label}
+            all={all}
+            startTime={startTime}
+            lastStartTime={endTime}
+            endTime={endTime + duration} />
+        )
+      }
     });
     return <div>{timebars}</div>
   }
