@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {unloadFile} from '../actions';
 import Link from '../components/Link';
+import About from '../components/About';
 import RouteList from '../components/RouteList';
 import RouteView from '../components/RouteView';
 import AgencyView from '../components/AgencyView';
@@ -42,7 +43,12 @@ function content(props) {
     )
   }
   else if(props.data == null) {
-    return <UploadContainer />
+    return (
+      <div>
+        <About />
+        <UploadContainer />
+      </div>
+    )
   }
   else if(props.path == undefined) {
     return <DashboardView feed={props.data} />
