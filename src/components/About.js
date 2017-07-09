@@ -14,6 +14,9 @@ export default function About() {
         handle large GTFS files. If your browser stops responding or
         crashes, it might be too big.
       </p>
+      <p>You can find GTFS files from <a href="http://transitfeeds.com/">
+          TransitFeeds</a>. Alternatively, you can use some feeds we maintain: <a href="/pnr-gtfs.zip">PNR GTFS</a> and <a href="/rail-gtfs.zip">Philippine Rail GTFS</a>.
+      </p>
       <p>This is still a work in progress. I already find it useful for my
         needs, and I wanted to see if other people might find it helpful.
         If you run into a bug or want to request a feature, please make an <a
