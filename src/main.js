@@ -7,6 +7,7 @@ import reducer from './reducers';
 import * as navigation from './reducers/navigation';
 import * as google from './reducers/google';
 import {load, serialize} from './debug';
+import {connectServer} from './actions';
 import App from './components/App';
 
 load().then(init => {
@@ -14,6 +15,10 @@ load().then(init => {
   let store = createStore(reducer, init, applyMiddleware(thunk, serialize));
   navigation.register(store);
   google.register(store);
+
+  if(window.GTFS_WEBSOCKET) {
+    store.dispatch(connectServer('ws://'+window.location.host));
+  }
 
   ReactDOM.render(
     <Provider store={store}>

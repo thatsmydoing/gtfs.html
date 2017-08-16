@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {unloadFile} from '../actions';
+import {unloadFeed} from '../actions';
 import Link from '../components/Link';
 import About from '../components/About';
 import RouteList from '../components/RouteList';
@@ -90,7 +90,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onUnload: () => dispatch(unloadFile())
+    onUnload: () => dispatch(unloadFeed())
   }
 }
 
