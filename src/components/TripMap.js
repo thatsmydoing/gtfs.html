@@ -49,7 +49,13 @@ export default function TripMap({timetable, shape}) {
 
   let points = stops.map(stop => stop.point);
   if(shapePoints.length > 0) {
-    points = trimPoints(shapePoints, firstStop, lastStop);
+    let trimmedPoints = trimPoints(shapePoints, firstStop, lastStop);
+    if(trimmedPoints.length >= stops.length) {
+      points = trimmedPoints;
+    }
+    else {
+      points = shapePoints;
+    }
   }
   let markers = stops.map((stop, index) => {
     return (
