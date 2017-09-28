@@ -9,7 +9,8 @@ function parseEntry(table, entry) {
     console.log('Processing '+table+'.txt');
     console.time('parsing');
     let parser = new Papa.StringStreamer({
-      header: true
+      header: true,
+      dynamicTyping: false
     });
     parser._nextChunk = () => {}
 
