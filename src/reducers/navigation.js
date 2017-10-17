@@ -10,7 +10,7 @@ export default function reducer(state = null, action) {
 }
 
 function pathToObject(path) {
-  let [type, id] = path.substring(1).split('/');
+  let [type, id] = decodeURIComponent(path).substring(1).split('/');
   // we force empty string to undefined
   let result = {type: type || undefined, id: id || undefined};
   if(!type && !id) {
