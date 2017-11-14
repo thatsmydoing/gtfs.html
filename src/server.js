@@ -13,7 +13,7 @@ import {debounce} from 'lodash';
 import * as Papa from 'papaparse';
 import {schema} from './gtfs/schema';
 import {index} from './gtfs/indexing';
-import {message, validate} from './gtfs/validation';
+import {message, validate, checkReferences} from './gtfs/validation';
 
 function parseFile(table, file) {
   return new Promise((resolve, reject) => {
@@ -58,8 +58,16 @@ function load(directory) {
   }, Promise.resolve()).then(_ => {
     validate(db, schema);
     index(db);
+    checkReferences(db);
+    if(db.errors.length > 0) {
+      console.log(db.errors.length + ' error(s) found');
+    }
+    else {
+      console.log('No errors found');
+    }
+    console.log(db.errors);
     return db;
-  });
+  }).catch(error => console.log(error));
 }
 
 function watch(directory, fn) {

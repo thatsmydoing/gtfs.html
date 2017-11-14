@@ -1,5 +1,7 @@
-import {difference, has, isPlainObject} from 'lodash';
+import {difference, forEach, has, isPlainObject} from 'lodash';
 import {daysPerMonth} from '../constants';
+
+const STRICTER_MODE = false;
 
 const floatRegex = /^-?\d+(\.?\d*)(e-?\d+)?$/;
 const dateRegex = /^(\d{4})(\d{2})(\d{2})$/;
@@ -240,12 +242,112 @@ export function validate(data, schema) {
   validateFeedInfo(data.feed_info, log);
   validateStopTimes(data.stop_times, log);
   console.timeEnd('validating');
-  if(data.errors.length > 0) {
-    console.log(data.errors.length + ' error(s) found');
+  console.log('Completed initial validation.');
+}
+
+/**
+ * This function is a helper function to check references by comparing indices.
+ * IDs appearing only in the source mean they are unused. IDs appearing only in
+ * the reference index mean these IDs are missing. Unused IDs are only warnings
+ * and can optionally be silenced if the reference index is optional. Missing
+ * IDs are always errors.
+ */
+function checkIndices(data, source, index, optional = false) {
+  let sourceIndex = data.indices[source];
+  let referenceIndex = data.indices[index];
+  let sourceIndexSpec = data.indexSpecs[source];
+  let referenceIndexSpec = data.indexSpecs[index];
+
+  let sourceIds = Object.keys(sourceIndex);
+  let referencedIds = Object.keys(referenceIndex);
+  let unusedIds = difference(sourceIds, referencedIds);
+  let missingIds = difference(referencedIds, sourceIds);
+
+  function log(type, file, ids, text) {
+    if(Array.isArray(ids)) {
+      ids.forEach(id => data.errors.push(message(
+        type,
+        file,
+        id+1,
+        text
+      )));
+    }
+    else {
+      data.errors.push(message(
+        type,
+        file,
+        ids+1,
+        text
+      ));
+    }
   }
-  else {
-    console.log('No errors found');
+
+  if(!optional) {
+    unusedIds.forEach(id => {
+      log(
+        'warning',
+        sourceIndexSpec.table+'.txt',
+        sourceIndex[id],
+        'The entry '+id+' is unused'
+      );
+    })
   }
+  missingIds.forEach(id => {
+    log(
+      'error',
+      referenceIndexSpec.table+'.txt',
+      referenceIndex[id],
+      'The referenced entry '+id+' does not exist'
+    );
+  })
+}
+
+/**
+ * This function checks if a block contains only one trip. While this is not a
+ * problem in itself, it might indicate mislabeled blocks. As this is
+ * potentially naggy, the check is normally behind a flag.
+ */
+function checkBlockIndices(data) {
+  forEach(data.indices['block.trips'], (arr, block) => {
+    if(arr.length == 1) {
+      data.errors.push(message(
+        'warning',
+        'trips.txt',
+        arr[0],
+        'Block '+block+' has only one trip'
+      ));
+    }
+  });
+}
+
+/**
+ * This function checks if the references between tables are valid. We do the
+ * checking by comparing indices. Currently, some potentially naggy checks are
+ * behind a strict flag. These include unused zones and blocks having only one
+ * trip. Setting STRICTER_MODE to true will enable these checks.
+ *
+ * TODO currently we don't fully check stop references. Stops can reference each
+ * other via the parent_station field and some stops are exits which don't need
+ * to be referenced themselves.
+ */
+export function checkReferences(data) {
+  console.log('Checking references...');
+  console.time('reference check');
+  checkIndices(data, 'calendar', 'service.exceptions', true);
+  checkIndices(data, 'calendar', 'service.trips');
+  checkIndices(data, 'routes', 'route.trips');
+  checkIndices(data, 'fare_attributes', 'fare.rules');
+  checkIndices(data, 'trips', 'trip.stopTimes');
+  checkIndices(data, 'trips', 'trip.frequencies', true);
+  checkIndices(data, 'stops', 'stop.trips', true);
+  checkIndices(data, 'agency', 'agency.routes');
+  checkIndices(data, 'zone.stops', 'zone.rules', !STRICTER_MODE);
+  checkIndices(data, 'shape.points', 'shape.trips');
+  if(STRICTER_MODE) {
+    checkBlockIndices(data);
+  }
+  console.timeEnd('reference check');
+  console.log('Completed reference check.');
 }
 
 export function message(type, file, line, message) {

@@ -4,13 +4,18 @@ function buildIndex(data, specs) {
   data.indices = {};
   Object.keys(specs).forEach(table => {
     specs[table].forEach(spec => {
-      data.indices[spec.name] = {};
+      if(data.indices[spec.name] === undefined) {
+        data.indices[spec.name] = {};
+      }
     });
     data[table].forEach((row, i) => {
       specs[table].forEach(spec => {
         let index = data.indices[spec.name];
         let key = row[spec.key];
-        if(spec.multiple) {
+        if(key === undefined || key === '') {
+          return;
+        }
+        else if(spec.multiple) {
           if(index[key]) {
             index[key].push(i);
           }
@@ -82,6 +87,9 @@ export function index(data) {
   indexSpec('shape.points', 'shapes', 'shape_id', true);
   indexSpec('shape.trips', 'trips', 'shape_id', true);
   indexSpec('agency.routes', 'routes', 'agency_id', true);
+  indexSpec('zone.rules', 'fare_rules', 'origin_id', true);
+  indexSpec('zone.rules', 'fare_rules', 'destination_id', true);
+  indexSpec('zone.rules', 'fare_rules', 'contains_id', true);
 
   buildIndex(data, specs);
   buildStopTripsIndex(data);

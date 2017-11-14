@@ -2,7 +2,7 @@ import * as Papa from 'papaparse';
 import JSZip from 'jszip';
 import {schema} from './schema';
 import {index} from './indexing';
-import {message, validate} from './validation';
+import {message, validate, checkReferences} from './validation';
 
 function parseEntry(table, entry) {
   return new Promise((resolve, reject) => {
@@ -66,6 +66,13 @@ export function load(file) {
   }).then(_ => {
     validate(db, schema);
     index(db);
+    checkReferences(db);
+    if(db.errors.length > 0) {
+      console.log(db.errors.length + ' error(s) found');
+    }
+    else {
+      console.log('No errors found');
+    }
     return db;
   })
 }
