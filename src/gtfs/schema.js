@@ -54,7 +54,8 @@ export const transferTypes = {
 
 export const locationTypes = [
   'Stop',
-  'Station'
+  'Station',
+  'Exit'
 ]
 
 export const transferPointTypes = [
@@ -374,6 +375,11 @@ export const fareAttributesSchema = {
   transfers: {
     name: 'Transfers',
     type: transferTypes
+  },
+  agency_id: {
+    name: 'Agency',
+    relation: 'agency',
+    optional: true
   },
   transfer_duration: {
     name: 'Transfer Duration',
