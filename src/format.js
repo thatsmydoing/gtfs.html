@@ -17,10 +17,11 @@ export function parseTime(time) {
 }
 
 export function formatTime(time) {
-  let h = Math.floor(time / 3600);
+  let d = Math.floor(time / 3600 / 24);
+  let h = Math.floor(time / 3600 % 24);
   let m = Math.floor(time % 3600 / 60);
   let s = Math.floor(time % 60);
-  return pad(h, 2)+':'+pad(m, 2)+':'+pad(s, 2);
+  return (d == 0 ? '' : '*')+pad(h, 2)+':'+pad(m, 2)+':'+pad(s, 2);
 }
 
 export function formatDuration(duration) {
