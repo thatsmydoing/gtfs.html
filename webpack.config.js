@@ -2,6 +2,11 @@ const common = {
   module: {
     rules: [
       {
+        test: /\.worker\.js$/,
+        exclude: /node_modules/,
+        loader: 'worker-loader'
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
