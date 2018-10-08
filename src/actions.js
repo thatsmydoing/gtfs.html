@@ -1,4 +1,4 @@
-import {load} from './gtfs';
+import GTFSWorker from './gtfs/index.worker';
 
 export const LOAD_GAPI_SUCCESS = 'LOAD_GAPI_SUCCESS';
 export const LOAD_FILE_REQUEST = 'LOAD_FILE_REQUEST';
@@ -23,16 +23,16 @@ export function loadFile(file) {
       type: LOAD_FILE_REQUEST,
       file
     });
-    load(file).then(
-      (data) => dispatch({
-        type: LOAD_FILE_SUCCESS,
-        data
-      }),
-      (error) => dispatch({
-        type: LOAD_FILE_FAILURE,
-        error
-      })
-    );
+    const worker = new GTFSWorker();
+    worker.onmessage = (event) => dispatch({
+      type: LOAD_FILE_SUCCESS,
+      data: event.data,
+    });
+    worker.onerror = (error) => dispatch({
+      type: LOAD_FILE_FAILURE,
+      error
+    });
+    worker.postMessage({ file });
   }
 }
 

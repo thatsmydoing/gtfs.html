@@ -1,7 +1,7 @@
 import {schema} from './schema';
 
 function buildIndex(data, specs) {
-  data.indices = {};
+  data.indices = data.indices || {};
   Object.keys(specs).forEach(table => {
     specs[table].forEach(spec => {
       if(data.indices[spec.name] === undefined) {
@@ -68,6 +68,9 @@ export function index(data) {
       specs[table] = [spec];
     }
   }
+  function deferredIndex(name, table, key, multiple) {
+    data.indexSpecs[name] = { table, key, multiple };
+  }
 
   Object.keys(schema).forEach(table => {
     let s = schema[table].schema;
@@ -84,17 +87,40 @@ export function index(data) {
   indexSpec('fare.rules', 'fare_rules', 'fare_id', true);
   indexSpec('trip.stopTimes', 'stop_times', 'trip_id', true);
   indexSpec('trip.frequencies', 'frequencies', 'trip_id', true);
-  indexSpec('shape.points', 'shapes', 'shape_id', true);
-  indexSpec('shape.trips', 'trips', 'shape_id', true);
   indexSpec('agency.routes', 'routes', 'agency_id', true);
   indexSpec('zone.rules', 'fare_rules', 'origin_id', true);
   indexSpec('zone.rules', 'fare_rules', 'destination_id', true);
   indexSpec('zone.rules', 'fare_rules', 'contains_id', true);
+  deferredIndex('shape.points', 'shapes', 'shape_id', true);
+  deferredIndex('shape.trips', 'trips', 'shape_id', true);
 
   buildIndex(data, specs);
   buildStopTripsIndex(data);
   console.timeEnd('indexing');
   console.log('Completed building indices.');
+  return data;
+}
+
+export function indexDeferred(data) {
+  console.log('Building expensive indices...');
+  console.time('indexing');
+  let specs = {};
+  function indexSpec(name, table, key, multiple) {
+    data.indexSpecs[name] = { table, key, multiple };
+    let spec = { name, key, multiple };
+    if(specs[table]) {
+      specs[table].push(spec);
+    }
+    else {
+      specs[table] = [spec];
+    }
+  }
+  indexSpec('shape.points', 'shapes', 'shape_id', true);
+  indexSpec('shape.trips', 'trips', 'shape_id', true);
+
+  buildIndex(data, specs);
+  console.timeEnd('indexing');
+  console.log('Completed building expensive indices.');
   return data;
 }
 
@@ -106,7 +132,7 @@ export function getIn(data, indexName, id) {
     return {...item};
   }
   if(spec.multiple) {
-    if(index[id] != undefined) {
+    if(index && index[id] != undefined) {
       return index[id].map(get);
     }
     else {
@@ -114,7 +140,7 @@ export function getIn(data, indexName, id) {
     }
   }
   else {
-    if(index[id] != undefined) {
+    if(index && index[id] != undefined) {
       return get(index[id]);
     }
     else {

@@ -1,8 +1,14 @@
 import * as Papa from 'papaparse';
 import JSZip from 'jszip';
 import {schema} from './schema';
-import {index} from './indexing';
-import {message, validate, checkReferences} from './validation';
+import {index, indexDeferred} from './indexing';
+import {
+  message,
+  validate,
+  validateDeferred,
+  checkReferences,
+  checkDeferredReferences
+} from './validation';
 
 function parseEntry(table, entry) {
   return new Promise((resolve, reject) => {
@@ -41,29 +47,36 @@ function parseEntry(table, entry) {
   });
 }
 
+function loadEntry(db, zip, acc, table) {
+  let entry = zip.file(table+'.txt');
+  if(entry != null) {
+    return acc.then(_ => parseEntry(table, entry).then(list => {
+      db[table] = list;
+      db.stats[table] = list.length;
+    }));
+  }
+  else {
+    if(!schema[table].optional) {
+      db.errors.push(message('error', table+'.txt', 0, 'Required file missing'));
+    }
+    db[table] = [];
+    return acc;
+  }
+}
+
 function load(file) {
   let db = {
     errors: [],
     stats: {}
   };
   return JSZip.loadAsync(file).then(zip => {
-    return Object.keys(schema).reduce((acc, table) => {
-      let entry = zip.file(table+'.txt');
-      if(entry != null) {
-        return acc.then(_ => parseEntry(table, entry).then(list => {
-          db[table] = list;
-          db.stats[table] = list.length;
-        }));
-      }
-      else {
-        if(!schema[table].optional) {
-          db.errors.push(message('error', table+'.txt', 0, 'Required file missing'));
-        }
-        db[table] = [];
-        return acc;
-      }
-    }, Promise.resolve());
-  }).then(_ => {
+    return Object.keys(schema)
+      .filter(key => key !== 'shapes')
+      .reduce((acc, table) => {
+        return loadEntry(db, zip, acc, table);
+      }, Promise.resolve())
+      .then(_ => zip);
+  }).then(zip => {
     validate(db, schema);
     index(db);
     checkReferences(db);
@@ -72,6 +85,22 @@ function load(file) {
     }
     else {
       console.log('No errors found');
+    }
+    self.postMessage(db);
+    return zip;
+  }).then(zip => {
+    return ['shapes'].reduce((acc, table) => {
+      return loadEntry(db, zip, acc, table);
+    }, Promise.resolve());
+  }).then(_ => {
+    validateDeferred(db, schema);
+    indexDeferred(db);
+    checkDeferredReferences(db);
+    if(db.errors.length > 0) {
+      console.log(db.errors.length + ' error(s) found');
+    }
+    else {
+      console.log('No additional errors found');
     }
     self.postMessage(db);
     self.close();

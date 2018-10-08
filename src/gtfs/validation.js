@@ -228,12 +228,14 @@ function validateStopTimes(stop_times, log) {
 export function validate(data, schema) {
   console.log('Validating...');
   console.time('validating');
-  Object.keys(schema).forEach(table => {
-    let log = (type, line, text) => {
-      data.errors.push(message(type, table+'.txt', line, text));
-    }
-    validate1(data[table], schema[table].schema, log);
-  });
+  Object.keys(schema)
+    .filter(key => key !== 'shapes')
+    .forEach(table => {
+      let log = (type, line, text) => {
+        data.errors.push(message(type, table+'.txt', line, text));
+      }
+      validate1(data[table], schema[table].schema, log);
+    });
   let log = (type, file, line, text) => {
     data.errors.push(message(type, file, line, text));
   }
@@ -243,6 +245,17 @@ export function validate(data, schema) {
   validateStopTimes(data.stop_times, log);
   console.timeEnd('validating');
   console.log('Completed initial validation.');
+}
+
+export function validateDeferred(data, schema) {
+  console.log('Validating shapes...');
+  console.time('validating');
+  let log = (type, line, text) => {
+    data.errors.push(message(type, 'shapes.txt', line, text));
+  }
+  validate1(data['shapes'], schema['shapes'].schema, log);
+  console.timeEnd('validating');
+  console.log('Completed initial shape and stop time validation.');
 }
 
 /**
@@ -342,12 +355,19 @@ export function checkReferences(data) {
   checkIndices(data, 'stops', 'stop.trips', true);
   checkIndices(data, 'agency', 'agency.routes');
   checkIndices(data, 'zone.stops', 'zone.rules', !STRICTER_MODE);
-  checkIndices(data, 'shape.points', 'shape.trips');
   if(STRICTER_MODE) {
     checkBlockIndices(data);
   }
   console.timeEnd('reference check');
   console.log('Completed reference check.');
+}
+
+export function checkDeferredReferences(data) {
+  console.log('Checking shape and stop time references...');
+  console.time('reference check');
+  checkIndices(data, 'shape.points', 'shape.trips');
+  console.timeEnd('reference check');
+  console.log('Completed shape and stop time reference check.');
 }
 
 export function message(type, file, line, message) {
