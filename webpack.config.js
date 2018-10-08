@@ -1,10 +1,10 @@
 const common = {
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['es2015', 'react'],
           plugins: ['transform-object-rest-spread']
@@ -21,7 +21,7 @@ const frontend = Object.assign({}, common, {
   devtool: 'cheap-module-source-map',
   entry: './src/main.js',
   output: {
-    path: './dist',
+    path: __dirname + '/dist',
     publicPath: '/dist/',
     filename: 'app.bundle.js'
   }
@@ -30,7 +30,7 @@ const frontend = Object.assign({}, common, {
 const backend = Object.assign({}, common, {
   entry: './src/server.js',
   output: {
-    path: './dist',
+    path: __dirname + '/dist',
     publicPath: '/dist/',
     filename: 'server.js'
   },
