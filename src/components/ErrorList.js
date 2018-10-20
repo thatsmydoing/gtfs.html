@@ -2,9 +2,13 @@ import React from 'react';
 
 export default function ErrorList(props) {
   let rows = props.feed.errors.map((error, i) => {
+    let line = error.line;
+    if (error.untilLine) {
+      line += `-${error.untilLine}`;
+    }
     return (
       <tr key={i} className={error.type}>
-        <td>{error.file}:{error.line}</td>
+        <td>{error.file}:{line}</td>
         <td>{error.message}</td>
       </tr>
     )

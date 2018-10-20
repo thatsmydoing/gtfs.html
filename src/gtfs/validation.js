@@ -232,12 +232,12 @@ export function validate(data, schema) {
     .filter(key => key !== 'shapes')
     .forEach(table => {
       let log = (type, line, text) => {
-        data.errors.push(message(type, table+'.txt', line, text));
+        message(data, type, table+'.txt', line, text);
       }
       validate1(data[table], schema[table].schema, log);
     });
   let log = (type, file, line, text) => {
-    data.errors.push(message(type, file, line, text));
+    message(data, type, file, line, text);
   }
   validateAgency(data.agency, log);
   validateRoutes(data.routes, log);
@@ -251,7 +251,7 @@ export function validateDeferred(data, schema) {
   console.log('Validating shapes...');
   console.time('validating');
   let log = (type, line, text) => {
-    data.errors.push(message(type, 'shapes.txt', line, text));
+    message(data, type, 'shapes.txt', line, text);
   }
   validate1(data['shapes'], schema['shapes'].schema, log);
   console.timeEnd('validating');
@@ -278,20 +278,22 @@ function checkIndices(data, source, index, optional = false) {
 
   function log(type, file, ids, text) {
     if(Array.isArray(ids)) {
-      ids.forEach(id => data.errors.push(message(
+      ids.forEach(id => message(
+        data,
         type,
         file,
         id+1,
         text
-      )));
+      ));
     }
     else {
-      data.errors.push(message(
+      message(
+        data,
         type,
         file,
         ids+1,
         text
-      ));
+      );
     }
   }
 
@@ -323,12 +325,13 @@ function checkIndices(data, source, index, optional = false) {
 function checkBlockIndices(data) {
   forEach(data.indices['block.trips'], (arr, block) => {
     if(arr.length == 1) {
-      data.errors.push(message(
+      message(
+        data,
         'warning',
         'trips.txt',
         arr[0],
         'Block '+block+' has only one trip'
-      ));
+      );
     }
   });
 }
@@ -370,11 +373,21 @@ export function checkDeferredReferences(data) {
   console.log('Completed shape and stop time reference check.');
 }
 
-export function message(type, file, line, message) {
-  return {
-    type,
-    file,
-    line,
-    message
+export function message(data, type, file, line, message) {
+  const lastError = data.errors.length === 0 ? null : data.errors[data.errors.length - 1];
+  if (
+    lastError &&
+    lastError.file === file &&
+    lastError.message === message &&
+    (lastError.untilLine || lastError.line) === line - 1
+  ) {
+    lastError.untilLine = line;
+  } else {
+    data.errors.push({
+      type,
+      file,
+      line,
+      message
+    });
   }
 }

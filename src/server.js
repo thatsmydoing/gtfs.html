@@ -50,7 +50,7 @@ function load(directory) {
     }
     else {
       if(!schema[table].optional) {
-        db.errors.push(message('error', table+'.txt', 0, 'Required file missing'));
+        message(db, 'error', table+'.txt', 0, 'Required file missing');
       }
       db[table] = [];
       return acc;
