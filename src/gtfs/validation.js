@@ -5,7 +5,7 @@ const STRICTER_MODE = false;
 
 const floatRegex = /^-?\d+(\.?\d*)(e-?\d+)?$/;
 const dateRegex = /^(\d{4})(\d{2})(\d{2})$/;
-const timeRegex = /^(\d{2}):(\d{2}):(\d{2})$/;
+const timeRegex = /^(\d{1,2}):(\d{2}):(\d{2})$/;
 
 const typeChecks = {
   boolean: checkRegex(/^(0|1)$/),
