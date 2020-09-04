@@ -29,7 +29,7 @@
     "jszip": "^3.1.5",
     "localforage": "^1.7.2",
     "lodash": "^4.17.11",
-    "papaparse": "^4.6.1",
+    "papaparse": "^5.2.0",
     "promise": "^8.0.2",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
